@@ -14,6 +14,15 @@ Movable::Movable(QWidget *parent) : QWidget(parent), paramPanel(nullptr)
 {
 }
 
+Movable::~Movable()
+{
+    if(paramPanel)
+    {
+        hidePropertiesPanel();
+        delete paramPanel;
+    }
+}
+
 void Movable::setKeyName(const QString &_keyName)
 {
     keyName = _keyName;
@@ -52,6 +61,7 @@ void Movable::mouseMoveEvent(QMouseEvent *me)
         {
             // Moving current node
             move(mapToParent(me->pos()) - clickVector);
+            parentWidget()->repaint();
         }
     }
 
@@ -73,6 +83,9 @@ QWidget *Movable::getParamPanel() const
 
 void Movable::setParamPanel(QWidget *value)
 {
+    if(paramPanel)
+        delete paramPanel;
+
     paramPanel = value;
 }
 

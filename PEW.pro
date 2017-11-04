@@ -61,7 +61,13 @@ SOURCES += main.cpp\
     Nodes/DataPinStates/readonlystate.cpp \
     Nodes/DataPinStates/writeonlystate.cpp \
     Nodes/DataPinStates/readwritestate.cpp \
-    UIManager/arrowdrawingmanager.cpp
+    UIManager/arrowdrawingmanager.cpp \
+    Nodes/nodeconnection.cpp \
+    Nodes/Data/booldatawidget.cpp \
+    Nodes/dataconnection.cpp \
+    Nodes/externalvariable.cpp \
+    Nodes/externalvariablefactory.cpp \
+    Nodes/BasicNodes/testnode.cpp
 
 HEADERS  += mainwindow.h \
     pewwidget.h \
@@ -103,6 +109,12 @@ HEADERS  += mainwindow.h \
     Nodes/pinproperties.h \
     Nodes/DataPinStates/writeonlystate.h \
     Nodes/DataPinStates/readwritestate.h \
-    UIManager/arrowdrawingmanager.h
+    UIManager/arrowdrawingmanager.h \
+    Nodes/nodeconnection.h \
+    Nodes/Data/booldatawidget.h \
+    Nodes/dataconnection.h \
+    Nodes/externalvariable.h \
+    Nodes/externalvariablefactory.h \
+    Nodes/BasicNodes/testnode.h
 
 FORMS    += mainwindow.ui

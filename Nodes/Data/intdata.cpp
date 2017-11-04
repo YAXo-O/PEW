@@ -9,7 +9,7 @@ IntData::~IntData()
 {
 }
 
-const void *IntData::getData() const
+const void *IntData::getData()
 {
     return &data;
 }

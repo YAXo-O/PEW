@@ -31,7 +31,6 @@ private:
     QString inputName;
     QString slotName;
 
-    QSize size;
     QLabel *lab;
 
     void setUpStyle(QPainter &p);

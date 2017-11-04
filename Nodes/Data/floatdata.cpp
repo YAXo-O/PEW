@@ -9,7 +9,7 @@ FloatData::~FloatData()
 {
 }
 
-const void *FloatData::getData() const
+const void *FloatData::getData()
 {
     return &data;
 }

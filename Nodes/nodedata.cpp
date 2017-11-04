@@ -7,6 +7,8 @@
 #include "nodedata.h"
 #include "../UIManager/nodecolourmanager.h"
 #include "../WidgetUtilities/Parsers/colourfileparsing.h"
+#include "../worldinfo.h"
+#include "../nodeview.h"
 
 #include <QDebug>
 
@@ -31,6 +33,7 @@ NodeData::NodeData(QWidget *parent) : Movable(parent),
 
 NodeData::~NodeData()
 {
+    breakConnections();
 }
 
 void NodeData::setConnections()
@@ -39,7 +42,13 @@ void NodeData::setConnections()
     connect(basicDataProps, SIGNAL(descriptionChanged(QString)), this, SLOT(changeDescriprion(QString)));
 }
 
-const void *NodeData::getData() const
+void NodeData::breakConnections()
+{
+    disconnect(this, SLOT(changeName(QString)));
+    disconnect(this, SLOT(changeDescriprion(QString)));
+}
+
+const void *NodeData::getData()
 {
     return nullptr;
 }
@@ -100,6 +109,14 @@ void NodeData::mouseMoveEvent(QMouseEvent *me)
         QWidget::mouseMoveEvent(me);
     else
         Movable::mouseMoveEvent(me);
+}
+
+void NodeData::mousePressEvent(QMouseEvent *me)
+{
+    if(me->button() & Qt::LeftButton && me->modifiers() == 0)
+        emit dataConnection(this);
+
+    Movable::mousePressEvent(me);
 }
 
 void NodeData::setRadius(int newRadius)

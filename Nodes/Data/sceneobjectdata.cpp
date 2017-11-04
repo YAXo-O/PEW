@@ -11,7 +11,7 @@ SceneObjectData::~SceneObjectData()
         delete data;
 }
 
-const void *SceneObjectData::getData() const
+const void *SceneObjectData::getData()
 {
     return data;
 }

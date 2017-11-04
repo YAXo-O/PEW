@@ -29,3 +29,12 @@ QColor DataPinState::getColour() const
 {
     return drawColor;
 }
+
+void *DataPinState::readValue()
+{
+    return nullptr;
+}
+
+void DataPinState::writeValue(void *)
+{
+}

@@ -17,6 +17,9 @@ public:
     void setColour(const QColor &&colour);
     QColor getColour() const;
 
+    virtual void *readValue();
+    virtual void writeValue(void *value);
+
 private:
     QWidget *parent;
     QColor drawColor;

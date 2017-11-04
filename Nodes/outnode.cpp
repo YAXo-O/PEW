@@ -51,4 +51,6 @@ void OutNode::enable(BaseNode *)
         cam->renderScene(*frame);
     }
 
+    BaseNode::enable();
+
 }

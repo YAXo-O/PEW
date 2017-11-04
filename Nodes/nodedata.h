@@ -17,8 +17,9 @@ public:
     virtual ~NodeData(); // Have to take care of data
 
     void setConnections();
+    void breakConnections();
 
-    virtual const void *getData() const;
+    virtual const void *getData();
     virtual void setData(const void *newData);
     virtual const char *dataType() const;
     static const char *dataType_s();
@@ -32,6 +33,7 @@ public:
 protected:
     void paintEvent(QPaintEvent *pe) override;
     void mouseMoveEvent(QMouseEvent *me) override;
+    void mousePressEvent(QMouseEvent *me) override;
 
     // Visual properties of the variable
     // Excliding border color, as it is chosen from the table
@@ -73,6 +75,9 @@ public slots:
 private slots:
     void changeName(const QString &name);
     void changeDescriprion(const QString &description);
+
+signals:
+    void dataConnection(NodeData *data);
 };
 
 #endif // NODEDATA_H

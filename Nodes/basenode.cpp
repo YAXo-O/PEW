@@ -4,6 +4,7 @@
 #include "basenode.h"
 #include "../WidgetUtilities/styleloader.h"
 #include "../nodeview.h"
+#include "pinproperties.h"
 
 #define DEBUG
 #ifdef DEBUG
@@ -45,7 +46,7 @@ QString BaseNode::getName()
     return nodeName;
 }
 
-void BaseNode::addInput(QString name, QString slotName)
+void BaseNode::addInput(QString name, QString slotName) throw(std::out_of_range)
 {
     Input *in = new Input(name, this);
     in->setSlotName(slotName);
@@ -53,17 +54,94 @@ void BaseNode::addInput(QString name, QString slotName)
     lab->resize(width(), lab->fontMetrics().height());
     lab->setAlignment(Qt::AlignLeft);
     in->setLab(lab);
-    inputs.append(in);
+
+    if(inputs.contains(slotName))
+    {
+        throw std::out_of_range("Current slot is already in use");
+        delete in;
+        delete lab;
+    }
+    else
+        inputs[slotName] = in;
 }
 
-void BaseNode::addOutput(QString name, QString signalName)
+void BaseNode::addOutput(QString name, QString signalName) throw(std::out_of_range)
 {
     Output *out = new Output(name, this);
     out->setSignalName(signalName);
     QLabel *lab = new QLabel(name, this);
     lab->setAlignment(Qt::AlignRight);
     out->setLab(lab);
-    outputs.append(out);
+
+    if(outputs.contains(signalName))
+    {
+        throw std::out_of_range("Current slot is already in use");
+        delete out;
+        delete lab;
+    }
+    else
+        outputs[signalName] = out;
+}
+
+void BaseNode::addDataPin(DataPin *pin) throw(std::out_of_range)
+{
+    if(!pin)
+        return;
+
+    const QString &varName = pin->getName();
+    if(pins.contains(varName))
+        throw std::out_of_range(QString("Pin with name " + varName + "already exists and in use!").toStdString());
+    else
+    {
+        pin->setParent(this);
+        pins[varName] = pin;
+    }
+
+}
+
+Input *BaseNode::getInput(const QString &slotName)
+{
+    if(inputs.contains(slotName))
+        return inputs[slotName];
+
+    return nullptr;
+}
+
+Input *BaseNode::getInput(const QString &&slotName)
+{
+    if(inputs.contains(slotName))
+        return inputs[slotName];
+
+    return nullptr;
+}
+
+Output *BaseNode::getOutput(const QString &signalName)
+{
+    if(outputs.contains(signalName))
+        return outputs[signalName];
+
+    return nullptr;
+}
+
+Output *BaseNode::getOutput(const QString &&signalName)
+{
+    if(outputs.contains(signalName))
+        return outputs[signalName];
+
+    return nullptr;
+}
+
+DataPin *BaseNode::getPin(const QString &pinName)
+{
+    if(pins.contains(pinName))
+        return pins[pinName];
+
+    return nullptr;
+}
+
+DataPin *BaseNode::getPin(const QString &&pinName)
+{
+    return getPin(pinName);
 }
 
 void BaseNode::connectToViewer(const NodeView *viewer)
@@ -72,7 +150,8 @@ void BaseNode::connectToViewer(const NodeView *viewer)
         connect(i, SIGNAL(receiveConnection(BaseNode*,QString)), viewer, SLOT(connectionEnds(BaseNode*,QString)));
     for(auto o:outputs)
         connect(o, SIGNAL(startConnection(BaseNode*,QString)), viewer, SLOT(connectionStarts(BaseNode*,QString)));
-    //connect(this, SIGNAL(becameActive(BaseNode*)), viewer, SLOT(nodeSelected(BaseNode*)));
+    for(auto p:pins)
+        connect(p, SIGNAL(dataConnection(DataPin*)), viewer, SLOT(startConnectionData(DataPin*)));
     Movable::connectToViewer(viewer);
 }
 
@@ -82,6 +161,8 @@ void BaseNode::disconnectFromViewer()
         disconnect(i, SIGNAL(receiveConnection(BaseNode*,QString)));
     for(auto o:outputs)
         disconnect(o, SIGNAL(startConnection(BaseNode*,QString)));
+    for(auto p:pins)
+        disconnect(p, SIGNAL(dataConnection(DataPin*)));
     Movable::disconnectFromViewer();
 }
 
@@ -124,7 +205,7 @@ void BaseNode::rearangeInputs()
 
     int perInputSpace = (height() - nameLab->height())/(inputs.count() + 1);
     int offset = nameLab->height();
-    int xOff = inputs[0]->width() + 5;
+    int xOff = pinSize.width() + 5;
 
     int i = 1;
     for(auto in:inputs)
@@ -142,14 +223,30 @@ void BaseNode::rearangeOutputs()
 
     int perOutputSpace = (height() - nameLab->height())/(outputs.count() + 1);
     int offset = nameLab->height();
-    int xPos = width() - outputs[0]->width();
+    int x = width() - pinSize.width();
 
     int i = 1;
     for(auto out:outputs)
     {
         int y = offset + (i++)*perOutputSpace;
-        out->move(xPos, y);
-        out->getLab()->move(xPos - out->getLab()->width()/2, y - out->height()/2);
+        out->move(x, y);
+        out->getLab()->move(x - out->getLab()->width()/2, y - out->height()/2);
+    }
+}
+
+void BaseNode::rearangePins()
+{
+    if(pins.count() == 0)
+        return;
+
+    int perPinSpace = (width()/(pins.count() + 1)) - pinSize.width()/2;
+    int y = height() - pinSize.height();
+
+    int i = 1;
+    for(auto pin:pins)
+    {
+        int x = perPinSpace * (i++);
+        pin->move(x, y);
     }
 }
 
@@ -169,5 +266,8 @@ void BaseNode::becomeActive()
 
 void BaseNode::enable(BaseNode *)
 {
-    qDebug() << "enabled";
+#ifdef ENABLED_CHECK
+    qDebug() << "enabled" << nodeName;
+#endif
+    emit done(this);
 }

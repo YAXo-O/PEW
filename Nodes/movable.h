@@ -12,6 +12,7 @@ class Movable : public QWidget
     Q_OBJECT
 public:
     explicit Movable(QWidget *parent = nullptr);
+    ~Movable();
 
     void setKeyName(const QString &keyName);
     void setKeyName(const QString &&keyName);

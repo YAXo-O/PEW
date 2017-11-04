@@ -9,7 +9,7 @@ VectorData::~VectorData()
 {
 }
 
-const void *VectorData::getData() const
+const void *VectorData::getData()
 {
     return &data;
 }

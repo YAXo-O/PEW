@@ -11,7 +11,7 @@ public:
     explicit SceneObjectData(QWidget *parent = nullptr);
     virtual ~SceneObjectData();
 
-    const void *getData() const override;
+    const void *getData() override;
     void setData(const void *newData) override;
     const char *dataType() const override;
     static const char *dataType_s();

@@ -9,6 +9,9 @@ public:
     explicit ReadOnlyState(QWidget *parent = nullptr);
     ~ReadOnlyState();
 
+    //void *readValue() override;
+    //void writeValue(void *value) override;
+
     void paint(QPainter *p) override;
 };
 

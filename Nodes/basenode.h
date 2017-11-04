@@ -2,10 +2,12 @@
 #define BASENODE_H
 
 #include <QLabel>
-#include <QList>
+#include <QHash>
+#include <QMap>
 #include "movable.h"
 #include "input.h"
 #include "output.h"
+#include "datapin.h"
 
 const int movableNode = 2;
 
@@ -19,8 +21,15 @@ public:
     void setName(QString &&name);
     QString getName();
 
-    void addInput(QString name, QString slotName);
-    void addOutput(QString name, QString signalName);
+    void addInput(QString name, QString slotName) throw(std::out_of_range);
+    void addOutput(QString name, QString signalName) throw(std::out_of_range);
+    void addDataPin(DataPin *pin) throw(std::out_of_range);
+    Input *getInput(const QString &slotName);
+    Input *getInput(const QString &&slotName);
+    Output *getOutput(const QString &signalName);
+    Output *getOutput(const QString &&signalName);
+    DataPin *getPin(const QString &pinName);
+    DataPin *getPin(const QString &&pinName);
 
     void connectToViewer(const NodeView *viewer) override;
     void disconnectFromViewer() override;
@@ -35,13 +44,15 @@ protected:
     void setUpStyle(QPainter &p);
     void rearangeInputs();
     void rearangeOutputs();
+    void rearangePins();
 
 private:
     QString nodeName;
     QLabel *nameLab;
 
-    QList<Input *> inputs;
-    QList<Output *> outputs;
+    QMap<QString, Input *> inputs;
+    QMap<QString, Output *> outputs;
+    QMap<QString, DataPin *> pins;
 
     int inputCount;
 
