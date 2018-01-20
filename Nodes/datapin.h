@@ -25,8 +25,11 @@ public:
     void setConnections();
     void breakConnections();
 
-    void *readValue();
+    const void *readValue();
     void writeValue(void *value);
+
+    bool isConnected() const; // Checks if any data node is connected
+    bool isDataPresent() const; // Checks if any data node is connected AND if any data within it is present
 
     NodeData *getData() const;
     void setData(NodeData *data);
@@ -50,6 +53,9 @@ private:
     DataPinState *state;
     QColor pinColour;
     NodeData *data;
+
+public slots:
+    void nodeKilled(Movable *data);
 
 signals:
     void dataConnection(DataPin *emitter);

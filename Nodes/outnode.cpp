@@ -1,6 +1,9 @@
 #include <QPainter>
+#include <QThread>
 #include "outnode.h"
 #include "../worldinfo.h"
+#include "externalvariablefactory.h"
+#include "Nodes/Data/cameradata.h"
 
 #define DEBUG
 #ifdef DEBUG
@@ -8,8 +11,10 @@
 #endif
 
 OutNode::OutNode(QString nodeName, QWidget *parent): BaseNode(nodeName, parent), frame(nullptr),
-    cam(nullptr)
+    cam(ExternalVariableFactory::createExternal(CameraData::dataType_s(), "Camera", DFF_BOTH))
 {
+    addDataPin(cam->getPin());
+    rearangePins();
 }
 
 OutNode::~OutNode()
@@ -29,8 +34,12 @@ void OutNode::enable(BaseNode *)
         delete frame;
     frame = new QImage(WorldInfo::getInstance().getViewport()->size(), QImage::Format_ARGB32);
 
+    Camera *camera = nullptr;
+    if(cam && cam->isDataPresent())
+        camera = (Camera*)(cam->getValue());
+
     // Check if we can view from camera, or not
-    if(!cam)
+    if(!camera)
     {
         QPainter p(frame);
 
@@ -44,13 +53,13 @@ void OutNode::enable(BaseNode *)
 
         p.end();
     }
-    else if(cam->getSize() != frame->size())
+    else
     {
-        cam->setSize(frame->size());
-        cam->setResolution(frame->size());
-        cam->renderScene(*frame);
+        camera->setSize(frame->size());
+        camera->setResolution(frame->size());
+        camera->renderScene(*frame);
     }
 
     BaseNode::enable();
-
+    WorldInfo::getInstance().getViewport()->repaint();
 }

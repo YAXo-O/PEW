@@ -1,12 +1,24 @@
 #include <QPainter>
+#include "../datapin.h"
 #include "readwritestate.h"
 
-ReadWriteState::ReadWriteState(QWidget *parent): DataPinState(parent)
+ReadWriteState::ReadWriteState(DataPin *parent): DataPinState(parent)
 {
 }
 
 ReadWriteState::~ReadWriteState()
 {
+}
+
+const void *ReadWriteState::readValue()
+{
+    return getParent()->getData() ? getParent()->getData()->getData() : nullptr;
+}
+
+void ReadWriteState::writeValue(void *value)
+{
+    if(getParent() && getParent()->getData())
+        getParent()->getData()->setData(value);
 }
 
 void ReadWriteState::paint(QPainter *p)

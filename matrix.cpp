@@ -10,9 +10,10 @@ Matrix::Matrix(const Matrix &other): sizex(other.sizex), sizey(other.sizey), dat
     std::memcpy(data, other.data, sizex*sizey*sizeof(double));
 }
 
-Matrix::Matrix(const Matrix &&other): sizex(other.sizex), sizey(other.sizey), data(new double[sizex*sizey])
+Matrix::Matrix(Matrix &&other): sizex(other.sizex), sizey(other.sizey), data(new double[sizex*sizey])
 {
     std::memcpy(data, other.data, sizex*sizey*sizeof(double));
+    other.data = nullptr;
 }
 
 Matrix::Matrix(const QVector3D &vec)
@@ -41,7 +42,7 @@ Matrix::Matrix(const QVector3D &&vec)
 
 Matrix::~Matrix()
 {
-    delete data;
+    delete[] data;
 }
 
 void Matrix::fill(double value)
@@ -134,6 +135,11 @@ Matrix &Matrix::operator*=(Matrix &other) throw(std::invalid_argument)
     return *this;
 }
 
+Matrix &Matrix::operator*=(Matrix &&other) throw(std::invalid_argument)
+{
+    return operator*=(other);
+}
+
 Matrix Matrix::operator+(const Matrix &other) throw(std::invalid_argument)
 {
     if(sizex != other.sizex || sizey != other.sizey)
@@ -173,6 +179,11 @@ Matrix Matrix::operator*(Matrix &other) throw(std::invalid_argument)
     return result;
 }
 
+Matrix Matrix::operator*(Matrix &&other) throw(std::invalid_argument)
+{
+    return operator*(other);
+}
+
 Matrix &Matrix::transpose() throw(std::invalid_argument)
 {
     if(sizex != sizey)
@@ -197,13 +208,54 @@ Matrix &Matrix::reverse() throw(std::invalid_argument)
     return *this;
 }
 
-double Matrix::determinator() throw(std::out_of_range)
-{
-    if(sizex != sizey || sizex != 3)
-        throw std::out_of_range("Determinators for square 3x3 matrixes only");
+#include <QDebug>
 
-    return at(0, 0)*(at(1, 1)*at(2, 2) - at(1, 2)*at(2, 1)) - at(1, 0)*(at(0, 1)*at(2, 2) - at(2, 1)*at(0, 2)) +
-            at(2, 0)*(at(0, 1)*at(1, 2) - at(0, 2)*at(1, 1));
+double Matrix::determinator() throw(std::invalid_argument)
+{
+    if(sizex != sizey)
+        throw std::out_of_range("non-square matrix!");
+
+    if(sizex == 2)
+        return at(0,0)*at(1,1) - at(1, 0)*at(0, 1);
+
+    double result = 0;
+    int sign = 1;
+    size_t dim = sizex-1;
+    for(size_t i = 0; i < sizex; i++)
+    {
+        // Filling smaller matrix for its determinator
+        Matrix lower(dim, dim);
+        for(size_t x = 0; x < dim; x++)
+            for(size_t y = 0; y < dim; y++)
+                lower.at(x, y) = at(x >= i ? x + 1 : x, y + 1);
+
+        result += sign*at(i, 0)*lower.determinator();
+        sign *= -1;
+    }
+
+    return result;
+}
+
+Matrix Matrix::transposed() throw(std::invalid_argument)
+{
+    if(sizex != sizey)
+        throw std::invalid_argument("non-square matrix!");
+
+    Matrix result(sizex, sizey);
+
+    for(size_t i = 0; i < sizex; i++)
+        for(size_t j = 0; j < sizex; j++)
+            result.at(i, j) = at(j, i);
+
+    return result;
+}
+
+Matrix Matrix::reversed() throw(std::invalid_argument)
+{
+    Matrix result = transposed();
+    result /= result.determinator();
+
+    return result;
 }
 
 #ifdef DEBUG
@@ -216,5 +268,6 @@ void Matrix::print()
             std::cout << data[i + j*sizex] << " ";
         std::cout << std::endl;
     }
+    std::cout << std::endl;
 }
 #endif

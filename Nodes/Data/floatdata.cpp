@@ -9,6 +9,11 @@ FloatData::~FloatData()
 {
 }
 
+bool FloatData::isPresent() const
+{
+    return true;
+}
+
 const void *FloatData::getData()
 {
     return &data;

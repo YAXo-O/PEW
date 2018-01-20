@@ -2,8 +2,10 @@
 #define TIMELINE_H
 
 #include <QObject>
-#include <QSlider>
-#include <QLineEdit>
+
+class QSlider;
+class QLineEdit;
+class QPushButton;
 
 class Timeline : public QObject
 {
@@ -12,8 +14,8 @@ public:
     explicit Timeline(QObject *parent = 0);
     ~Timeline() = default;
 
-    void setConnections(QSlider *slide, QLineEdit *edit);
-    void breakConnections(QSlider *slide, QLineEdit *edit);
+    void setConnections(QSlider *slide, QLineEdit *edit, QPushButton *simulate);
+    void breakConnections(QSlider *slide, QLineEdit *edit, QPushButton *simulate);
 
 signals:
     void frameChanged(unsigned newFrame);

@@ -8,7 +8,9 @@
 struct face
 {
     QVector<size_t> verts;
-    QVector3D normal;
+    QVector<size_t> normals;
+    QVector<size_t> uvs;
+
     QColor color = Qt::red; // Пока сделаем грани, закрашенные одним цветом
     bool bVisible = true;
 };

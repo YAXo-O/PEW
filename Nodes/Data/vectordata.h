@@ -12,6 +12,7 @@ public:
     explicit VectorData(QWidget *parent = nullptr);
     virtual ~VectorData();
 
+    bool isPresent() const override;
     const void *getData() override;
     void setData(const void *newData) override;
     const char *dataType() const override;

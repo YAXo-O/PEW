@@ -2,16 +2,21 @@
 #include <QIntValidator>
 #include <QPainter>
 #include <limits>
+#include <QGraphicsBlurEffect>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "pewwidget.h"
 #include "worldinfo.h"
-#include "Model/simpletestmodel.h"
 #include "pointtransformations.h"
 #include "UIManager/nodecolourmanager.h"
 #include "WidgetUtilities/Parsers/colourfileparsing.h"
 #include "UIManager/arrowdrawingmanager.h"
-#include <QGraphicsBlurEffect>
+
+#include "CompulsorySceneObjects/baselight.h"
+#include "Model/wireframemesh.h"
+#include "Model/wireframemeshinstance.h"
+#include "WidgetUtilities/Parsers/objfileparser.h"
 
 #include <QDebug>
 
@@ -58,7 +63,7 @@ void MainWindow::mousePressEvent(QMouseEvent *pe)
 void MainWindow::setConnections()
 {
     connectWidgets();
-    tline->setConnections(ui->timeline_slider, ui->current_frame_line);
+    tline->setConnections(ui->timeline_slider, ui->current_frame_line, ui->simulate_pb);
     connect(tline, SIGNAL(frameChanged(uint)), &(WorldInfo::getInstance()), SLOT(changeCurrentFrame(uint)));
 }
 
@@ -84,9 +89,20 @@ void MainWindow::setValidators()
 
 void MainWindow::prepareScene()
 {
-    SimpleTestModel *sphere = new SimpleTestModel();
-    WorldInfo::getInstance().registerObject(sphere);
-    sphere = new SimpleTestModel({0, -100, 0}, 60);
-    sphere->setCol(Qt::blue);
-    WorldInfo::getInstance().registerObject(sphere);
+    WorldInfo &wifo = WorldInfo::getInstance();
+    TextureManager &manager = wifo.textureManager();
+    QImage &texture = manager.getTexture("./checker.jpg");
+
+    OBJFileParser parser;
+    WireframeMesh *mesh = parser.load("./sphere.obj");
+    WireframeMeshInstance *instance = new WireframeMeshInstance(mesh);
+    instance->material().getDiffuse().setTexture(&texture);
+    instance->material().getAmbient().setTexture(&texture);
+    instance->material().getAmbient().setIndex(.1);
+    wifo.registerObject(instance);
+
+    BaseLight *light = new BaseLight({QVector3D(40, -100, 100), Qt::red, 6800}, nullptr);
+    BaseLight *backLight = new BaseLight({QVector3D(40, 100, 100), Qt::blue, 6800}, nullptr);
+    wifo.registerObject(light);
+    wifo.registerObject(backLight);
 }

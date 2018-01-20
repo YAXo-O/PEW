@@ -1,8 +1,11 @@
 #ifndef OUTNODE_H
 #define OUTNODE_H
 
+#include <QTimer>
 #include "basenode.h"
 #include "../CompulsorySceneObjects/camera.h"
+
+class ExternalVariable;
 
 class OutNode : public BaseNode
 {
@@ -19,8 +22,8 @@ public slots:
 
 private:
     QImage *frame;
-    Camera *cam;
-
+    ExternalVariable *cam;
+    QTimer refreshTimer;
 };
 
 #endif // OUTNODE_H

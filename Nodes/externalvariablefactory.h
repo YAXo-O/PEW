@@ -11,6 +11,7 @@ public:
 
 private:
     static ExternalVariable *createBoolean(const QString &varName, const dataFlowFlag direction);
+    static ExternalVariable *createCamera(const QString &varName, const dataFlowFlag direction);
 };
 
 #endif // EXTERNALVARIABLEFACTORY_H

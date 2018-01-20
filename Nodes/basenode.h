@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QHash>
 #include <QMap>
+#include <QGroupBox>
 #include "movable.h"
 #include "input.h"
 #include "output.h"
@@ -46,7 +47,10 @@ protected:
     void rearangeOutputs();
     void rearangePins();
 
+    void appendExternalParamsWidget(QWidget *wid);
+
 private:
+    QGroupBox *externVars;
     QString nodeName;
     QLabel *nameLab;
 

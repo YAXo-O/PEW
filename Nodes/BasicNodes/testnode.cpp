@@ -12,6 +12,8 @@ TestNode::TestNode(QString nodeName, QWidget *parent): BaseNode(nodeName,parent)
     addDataPin(read->getPin());
     addDataPin(write->getPin());
     addDataPin(both->getPin());
+    appendExternalParamsWidget(read->getParamsContainer()->getParamsPanel());
+    appendExternalParamsWidget(both->getParamsContainer()->getParamsPanel());
     addInput("Input name", "input slot");
     rearangeInputs();
     rearangePins();
@@ -21,13 +23,12 @@ TestNode::~TestNode()
 {
 }
 
-/*
 void TestNode::enable(BaseNode *caller)
 {
-    qDebug() << *((bool*)(read->getValue()));
-    qDebug() << *((bool*)(write->getValue()));
-    qDebug() << *((bool*)(both->getValue()));
+    qDebug() << "Read-only state: " << *((bool*)(read->getValue()));
+    qDebug() << "Read-write state: " << *((bool*)(both->getValue()));
+    bool t = true;
+    write->setValue(&t);
 
     BaseNode::enable(caller);
 }
-*/

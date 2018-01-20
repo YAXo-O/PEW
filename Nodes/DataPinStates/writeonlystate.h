@@ -6,8 +6,11 @@
 class WriteOnlyState : public DataPinState
 {
 public:
-    explicit WriteOnlyState(QWidget *parent = nullptr);
+    explicit WriteOnlyState(DataPin *parent = nullptr);
     virtual ~WriteOnlyState();
+
+    const void *readValue() override;
+    void writeValue(void *value) override;
 
     virtual void paint(QPainter *p);
 };

@@ -4,6 +4,8 @@
 #include "viewport.h"
 #include "worldinfo.h"
 
+#include <QDebug>
+
 Viewport::Viewport(QWidget *parent): PEWWidget(parent)
 {
 }
@@ -19,6 +21,8 @@ void Viewport::paintEvent(QPaintEvent *pe)
     setUpStyle(p);
     p.end();
 
+    // Painting gray because of async stuff;
+    // We get buffer before it was changed;
     QWidget::paintEvent(pe);
 }
 

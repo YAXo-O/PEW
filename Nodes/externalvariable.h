@@ -2,23 +2,29 @@
 #define EXTERNALVARIABLE_H
 
 #include "datapin.h"
+#include "nodeparamscontainer.h"
 
 class ExternalVariable
 {
 public:
-    ExternalVariable(DataPin *pin, QWidget *variablePanel);
+    ExternalVariable(DataPin *pin, NodeParamsContainer *variablePanel);
     ~ExternalVariable();
 
-    void *getValue();
+    const void *getValue();
     void setValue(void *value);
     const char *getType();
 
     DataPin *getPin();
     const QString &getVarName();
 
+    bool isConnected() const;
+    bool isDataPresent() const;
+
+    NodeParamsContainer *getParamsContainer() const;
+
 private:
     DataPin *pin;
-    QWidget *variablePanel;
+    NodeParamsContainer *variablePanel;
 };
 
 #endif // EXTERNALVARIABLE_H

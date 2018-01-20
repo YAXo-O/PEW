@@ -22,9 +22,11 @@ public:
     QSize getSize();
 
 public slots:
+    void setFOV(double fov);
     void setDistance(double distance); // distance from origin to projection plane
     void setDirection(const QVector3D &dir); // direction, in which camera is oriented
     void setDirection(float roll, float pitch, float yaw);
+    void setDirection(int roll, int pitch, int yaw);
     void setOrigin(const QVector3D &newOrigin);
     void setResolution(const QSize &newRes);
     void setSize(const QSize &newSize);

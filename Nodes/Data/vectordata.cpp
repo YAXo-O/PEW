@@ -9,6 +9,11 @@ VectorData::~VectorData()
 {
 }
 
+bool VectorData::isPresent() const
+{
+    return true;
+}
+
 const void *VectorData::getData()
 {
     return &data;

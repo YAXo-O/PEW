@@ -4,8 +4,8 @@
 LabeledInput::LabeledInput(QWidget *parent) : QWidget(parent), line(new QLineEdit), text(new QLabel)
 {
     QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget(line);
     layout->addWidget(text);
+    layout->addWidget(line);
     setLayout(layout);
 
     setConnections();

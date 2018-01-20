@@ -3,25 +3,28 @@
 
 #include <QWidget>
 
+class DataPin;
+
 class DataPinState
 {
 public:
-    explicit DataPinState(QWidget *parent = nullptr);
+    explicit DataPinState(DataPin *parent = nullptr);
     virtual ~DataPinState();
 
     virtual void paint(QPainter *p) = 0;
-
-    QWidget *getParent() const;
 
     void setColour(const QColor &colour);
     void setColour(const QColor &&colour);
     QColor getColour() const;
 
-    virtual void *readValue();
+    virtual const void *readValue();
     virtual void writeValue(void *value);
 
+protected:
+    DataPin *getParent() const;
+
 private:
-    QWidget *parent;
+    DataPin *parent;
     QColor drawColor;
 };
 

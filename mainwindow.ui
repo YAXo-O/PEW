@@ -964,7 +964,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="timeline_layout" stretch="7,0">
+     <layout class="QHBoxLayout" name="timeline_layout" stretch="7,0,0">
       <item>
        <widget class="QSlider" name="timeline_slider">
         <property name="palette">
@@ -1017,6 +1017,22 @@ QSlider::handle:horizontal
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="simulate_pb">
+        <property name="styleSheet">
+         <string notr="true">background-color:  rgb(54, 54, 54);
+border-color: rgb(100, 100, 100);
+border-width: 2px;
+color: rgb(156, 156, 156) ;</string>
+        </property>
+        <property name="text">
+         <string>Simulate</string>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
@@ -1027,7 +1043,7 @@ QSlider::handle:horizontal
      <x>0</x>
      <y>0</y>
      <width>1043</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

@@ -1,7 +1,8 @@
+#include "../datapin.h"
 #include "datapinstate.h"
 #include "../pinproperties.h"
 
-DataPinState::DataPinState(QWidget *_parent): parent(_parent)
+DataPinState::DataPinState(DataPin *_parent): parent(_parent)
 {
     parent->resize(pinSize);
 }
@@ -10,7 +11,7 @@ DataPinState::~DataPinState()
 {
 }
 
-QWidget *DataPinState::getParent() const
+DataPin *DataPinState::getParent() const
 {
     return parent;
 }
@@ -30,7 +31,7 @@ QColor DataPinState::getColour() const
     return drawColor;
 }
 
-void *DataPinState::readValue()
+const void *DataPinState::readValue()
 {
     return nullptr;
 }

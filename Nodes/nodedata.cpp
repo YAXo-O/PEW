@@ -2,7 +2,7 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QVector2D>
-#include <QAbstractScrollArea>
+#include <QScrollArea>
 #include <QVBoxLayout>
 #include "nodedata.h"
 #include "../UIManager/nodecolourmanager.h"
@@ -14,26 +14,45 @@
 
 NodeData::NodeData(QWidget *parent) : Movable(parent),
     borderColor(Qt::green), radius(40), offset(5),
-    varName("Unnamed"), varDescription(""), basicDataProps(new DataProperties)
+    varName("Unnamed"), varDescription(""), basicDataProps(new DataProperties),
+    debugValue(new LabeledInput)
 {
     int size = radius*2 + offset*2;
     resize(size, size);
 
-    setParamPanel(new QAbstractScrollArea);
-    getParamPanel()->setLayout(new QVBoxLayout);
-    getParamPanel()->layout()->addWidget(basicDataProps);
+    appendParamsWidget(basicDataProps);
 
     basicDataProps->setNameInput("Unnamed");
     basicDataProps->setNameLabel("Variable name");
     basicDataProps->setDescriptionLabel("Variable description");
     basicDataProps->setGroupName("Basic variable properties");
+    basicDataProps->setMinimumHeight(200);
+
+    appendParamsWidget(debugValue);
+    debugValue->getLineEdit()->setReadOnly(true);
+    debugValue->setText("Current value: ");
 
     setConnections();
+
+    realKeyName = this->getKeyName();
 }
 
 NodeData::~NodeData()
 {
     breakConnections();
+    disconnectFromViewer();
+}
+
+void NodeData::connectToViewer(const NodeView *viewer)
+{
+    connect(this, SIGNAL(dataConnection(NodeData*)), viewer, SLOT(endConnectionData(NodeData*)));
+    Movable::connectToViewer(viewer);
+}
+
+void NodeData::disconnectFromViewer()
+{
+    disconnect(this, SIGNAL(dataConnection(NodeData*)));
+    Movable::disconnectFromViewer();
 }
 
 void NodeData::setConnections()
@@ -46,6 +65,11 @@ void NodeData::breakConnections()
 {
     disconnect(this, SLOT(changeName(QString)));
     disconnect(this, SLOT(changeDescriprion(QString)));
+}
+
+bool NodeData::isPresent() const
+{
+    return false;
 }
 
 const void *NodeData::getData()
@@ -119,6 +143,21 @@ void NodeData::mousePressEvent(QMouseEvent *me)
     Movable::mousePressEvent(me);
 }
 
+void NodeData::enterEvent(QEvent *me)
+{
+    Movable::enterEvent(me);
+
+    NodeView *view = WorldInfo::getInstance().getNodeView();
+    if(view)
+    {
+        DataConnection *connection = view->getCurrentDataConnection();
+        if(connection && connection->getPin() && connection->getPin()->getType() != this->dataType())
+            setCursor(Qt::ForbiddenCursor);
+        else
+            setCursor(Qt::ArrowCursor);
+    }
+}
+
 void NodeData::setRadius(int newRadius)
 {
     radius = newRadius;
@@ -169,6 +208,16 @@ const QString &NodeData::getVarDescription() const
     return varDescription;
 }
 
+void NodeData::setDebugValue(const QString &value)
+{
+    debugValue->setInput(value);
+}
+
+void NodeData::setDebugValue(const QString &&value)
+{
+    debugValue->setInput(value);
+}
+
 void NodeData::setUpBorder()
 {
     NodeColourManager *man = nullptr;
@@ -202,6 +251,10 @@ void NodeData::visualPrepare(const QString &name)
 void NodeData::visualPrepare(const QString &&name)
 {
     visualPrepare(name);
+}
+
+void NodeData::prepareParamPanel()
+{
 }
 
 void NodeData::becomeInactive()

@@ -10,6 +10,7 @@ public:
     explicit FloatData(QWidget *parent = nullptr);
     virtual ~FloatData();
 
+    bool isPresent() const override;
     const void *getData() override;
     void setData(const void *newData) override;
     const char *dataType() const override;

@@ -1,6 +1,7 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QMouseEvent>
+#include <QVBoxLayout>
 #include "basenode.h"
 #include "../WidgetUtilities/styleloader.h"
 #include "../nodeview.h"
@@ -11,7 +12,9 @@
 #include <QDebug>
 #endif
 
-BaseNode::BaseNode(QString _nodeName, QWidget *parent) : Movable(parent), nodeName(_nodeName),
+#define NO_ENABLED_CHECK
+
+BaseNode::BaseNode(QString _nodeName, QWidget *parent) : Movable(parent), externVars(new QGroupBox), nodeName(_nodeName),
     nameLab(new QLabel(nodeName, this)), inputCount(0)
 {
     QString styleSheet = StyleLoader::loadCSS(cssPath + "BaseNode.css");
@@ -29,6 +32,8 @@ BaseNode::BaseNode(QString _nodeName, QWidget *parent) : Movable(parent), nodeNa
     rearangeInputs();
     addOutput("Done", "done(BaseNode *)");
     rearangeOutputs();
+    externVars->setTitle("External Variables");
+    appendParamsWidget(externVars);
 }
 
 void BaseNode::setName(QString &name)
@@ -250,10 +255,20 @@ void BaseNode::rearangePins()
     }
 }
 
+void BaseNode::appendExternalParamsWidget(QWidget *wid)
+{
+    if(!externVars->layout())
+        externVars->setLayout(new QVBoxLayout);
+
+    externVars->layout()->addWidget(wid);
+}
+
 void BaseNode::becomeInactive()
 {
     setObjectName("inactive");
     setStyleSheet(this->styleSheet());
+
+    Movable::becomeInactive();
 }
 
 void BaseNode::becomeActive()

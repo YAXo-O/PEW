@@ -11,6 +11,11 @@ SceneObjectData::~SceneObjectData()
         delete data;
 }
 
+bool SceneObjectData::isPresent() const
+{
+    return data != nullptr;
+}
+
 const void *SceneObjectData::getData()
 {
     return data;

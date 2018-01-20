@@ -17,6 +17,10 @@ TEMPLATE = app
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
+#For profiling
+QMAKE_CXXFLAGS_DEBUG += -pg
+QMAKE_LFLAGS_DEBUG += -pg
+
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
@@ -39,7 +43,6 @@ SOURCES += main.cpp\
     Model/model.cpp \
     Model/wireframemesh.cpp \
     Model/wireframemeshinstance.cpp \
-    Model/simpletestmodel.cpp \
     CompulsorySceneObjects/camera.cpp \
     matrix.cpp \
     pointtransformations.cpp \
@@ -67,7 +70,21 @@ SOURCES += main.cpp\
     Nodes/dataconnection.cpp \
     Nodes/externalvariable.cpp \
     Nodes/externalvariablefactory.cpp \
-    Nodes/BasicNodes/testnode.cpp
+    Nodes/BasicNodes/testnode.cpp \
+    Nodes/nodeparamscontainer.cpp \
+    Nodes/Data/boolparamscontainer.cpp \
+    Nodes/Data/cameradata.cpp \
+    Nodes/BasicNodes/createcamera.cpp \
+    Nodes/Data/cameradatawidget.cpp \
+    Nodes/Data/cameraparamscontainer.cpp \
+    CompulsorySceneObjects/baselight.cpp \
+    Model/material.cpp \
+    Model/colormap.cpp \
+    texturemanager.cpp \
+    WidgetUtilities/Parsers/objfileparser.cpp \
+    WidgetUtilities/Utilities/stringconverter.cpp \
+    externalmath.cpp \
+    Model/ParametricSpheres/sphere.cpp
 
 HEADERS  += mainwindow.h \
     pewwidget.h \
@@ -86,7 +103,6 @@ HEADERS  += mainwindow.h \
     Model/modelinfo.h \
     Model/wireframemesh.h \
     Model/wireframemeshinstance.h \
-    Model/simpletestmodel.h \
     CompulsorySceneObjects/camera.h \
     matrix.h \
     pointtransformations.h \
@@ -115,6 +131,23 @@ HEADERS  += mainwindow.h \
     Nodes/dataconnection.h \
     Nodes/externalvariable.h \
     Nodes/externalvariablefactory.h \
-    Nodes/BasicNodes/testnode.h
+    Nodes/BasicNodes/testnode.h \
+    Nodes/nodeparamscontainer.h \
+    Nodes/Data/boolparamscontainer.h \
+    Nodes/Data/cameradata.h \
+    Nodes/Data/alldata.h \
+    Nodes/BasicNodes/createcamera.h \
+    Nodes/Data/cameradatawidget.h \
+    CompulsorySceneObjects/cameraoptions.h \
+    Nodes/Data/cameraparamscontainer.h \
+    CompulsorySceneObjects/baselight.h \
+    CompulsorySceneObjects/lightinfo.h \
+    Model/material.h \
+    Model/colormap.h \
+    texturemanager.h \
+    WidgetUtilities/Parsers/objfileparser.h \
+    WidgetUtilities/Utilities/stringconverter.h \
+    externalmath.h \
+    Model/ParametricSpheres/sphere.h
 
 FORMS    += mainwindow.ui

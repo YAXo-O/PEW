@@ -6,8 +6,11 @@
 class ReadWriteState : public DataPinState
 {
 public:
-    explicit ReadWriteState(QWidget *parent = nullptr);
+    explicit ReadWriteState(DataPin *parent = nullptr);
     ~ReadWriteState();
+
+    const void *readValue() override;
+    void writeValue(void *value) override;
 
     void paint(QPainter *p) override;
 };

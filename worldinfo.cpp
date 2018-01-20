@@ -2,7 +2,7 @@
 
 WorldInfo::~WorldInfo()
 {
-    // Hopefully it works. Should remember not do add thier anything, that has to be deleted any other way
+    // Hopefully it works. Should remember not do add there anything, that has to be deleted any other way
     // Or maybe using smart pointers?
     for(auto i: objects)
         delete i;
@@ -17,7 +17,10 @@ WorldInfo &WorldInfo::getInstance()
 
 void WorldInfo::setNodeView(NodeView *view)
 {
+    if(nview)
+        disconnect(this, SIGNAL(resetSimulation()), nview, SIGNAL(resetMovables()));
     nview = view;
+    connect(this, SIGNAL(resetSimulation()), view, SIGNAL(resetMovables()));
 }
 
 NodeView *WorldInfo::getNodeView() const
@@ -27,7 +30,7 @@ NodeView *WorldInfo::getNodeView() const
 
 WorldInfo::WorldInfo(): QObject(nullptr),
     currentFrame(0), startFrame(0), endFrame(100), fps(30),
-    nview(nullptr), viewport(nullptr), nodeParams(nullptr)
+    nview(nullptr), viewport(nullptr), nodeParams(nullptr), tManager(new TextureManager)
 {
 }
 
@@ -57,6 +60,8 @@ void WorldInfo::registerObject(SceneObject *appendee)
             return;
 
     objects.append(appendee);
+    if(appendee->type() == BaseLight::type_s())
+        lights.append(dynamic_cast<BaseLight *>(appendee));
 }
 
 void WorldInfo::removeObject(SceneObject *removee)
@@ -65,6 +70,8 @@ void WorldInfo::removeObject(SceneObject *removee)
         return;
 
     objects.removeOne(removee);
+    if(removee->type() == BaseLight::type_s())
+        lights.removeOne(dynamic_cast<BaseLight*>(removee));
 }
 
 void WorldInfo::deleteObject(SceneObject *&deletee)
@@ -90,6 +97,48 @@ QList<SceneObject *>::iterator WorldInfo::end()
 int WorldInfo::objectsCount()
 {
     return objects.count();
+}
+
+QList<BaseLight *>::iterator WorldInfo::beginLights()
+{
+    return lights.begin();
+}
+
+QList<BaseLight *>::iterator WorldInfo::endLights()
+{
+    return lights.end();
+}
+
+int WorldInfo::lightsCount()
+{
+    return lights.count();
+}
+
+bool WorldInfo::isBlocked(const QVector3D &origin, const QVector3D &dir)
+{
+    for(auto i = begin(); i != end(); i++)
+    {
+        if((*i)->blocks(origin, dir))
+            return true;
+    }
+
+    return false;
+}
+
+bool WorldInfo::isBlocked(const QVector3D &origin, const QVector3D &dir, const QVector3D &exclude)
+{
+    for(auto i = begin(); i != end(); i++)
+    {
+        if((*i)->blocks(origin, dir, exclude))
+            return true;
+    }
+
+    return false;
+}
+
+TextureManager &WorldInfo::textureManager()
+{
+    return *tManager;
 }
 
 void WorldInfo::setViewport(Viewport *&value)
@@ -130,4 +179,10 @@ void WorldInfo::renderFrame(QImage *&frame)
     frame = nullptr;
     if(nview)
         nview->getBuffer(frame);
+}
+
+void WorldInfo::simulate()
+{
+    emit resetSimulation();
+    nview->simulate();
 }

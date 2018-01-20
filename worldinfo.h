@@ -8,8 +8,12 @@
 #include "viewport.h"
 #include "sceneobject.h"
 #include "CompulsorySceneObjects/camera.h"
+#include "tracinginfo.h"
+#include "CompulsorySceneObjects/baselight.h"
+#include "texturemanager.h"
 
 class NodeData;
+class QVector3D;
 
 class WorldInfo : public QObject
 {
@@ -40,6 +44,14 @@ public:
     QList<SceneObject *>::iterator end();
     int objectsCount();
 
+    QList<BaseLight *>::iterator beginLights();
+    QList<BaseLight *>::iterator endLights();
+    int lightsCount();
+
+    bool isBlocked(const QVector3D &origin,const QVector3D &dir);
+    bool isBlocked(const QVector3D &origin, const QVector3D &dir, const QVector3D &exclude);
+    TextureManager &textureManager();
+
 protected:
     WorldInfo();
 
@@ -53,6 +65,8 @@ private:
     Viewport *viewport;
     PEWWidget *nodeParams;
     QList<SceneObject *> objects;
+    QList<BaseLight *> lights;
+    TextureManager *tManager;
 
 public slots:
     void changeCurrentFrame(unsigned newCF);
@@ -60,12 +74,14 @@ public slots:
     void changeEndFrame(unsigned newEF);
     void changeFPS(double newFPS);
     void renderFrame(QImage *&frame);
+    void simulate();
 
 signals:
     void currentFrameChanged(unsigned newCF);
     void startFrameChanged(unsigned newSF);
     void endFrameChanged(unsigned newEF);
     void fpsChanged(double newFPS);
+    void resetSimulation();
 };
 
 #endif // WORLDINFO_H

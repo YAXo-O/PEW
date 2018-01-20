@@ -4,6 +4,7 @@
 #include <typeinfo>
 #include "movable.h"
 #include "../PropertiesWidgets/dataproperties.h"
+#include "../PropertiesWidgets/labeledinput.h"
 
 // How to store data? It can be any type
 
@@ -16,9 +17,13 @@ public:
     explicit NodeData(QWidget *parent = nullptr); // Have to add initial data type
     virtual ~NodeData(); // Have to take care of data
 
+    void connectToViewer(const NodeView *viewer) override;
+    void disconnectFromViewer() override;
+
     void setConnections();
     void breakConnections();
 
+    virtual bool isPresent() const;
     virtual const void *getData();
     virtual void setData(const void *newData);
     virtual const char *dataType() const;
@@ -30,24 +35,29 @@ public:
 
     int type() override;
 
+    int getRadius() const;
+    int getOffset() const;
+    const QString &getVarName() const;
+    const QString &getVarDescription() const;
+
+    void setDebugValue(const QString &value);
+    void setDebugValue(const QString &&value);
+
 protected:
     void paintEvent(QPaintEvent *pe) override;
     void mouseMoveEvent(QMouseEvent *me) override;
     void mousePressEvent(QMouseEvent *me) override;
+    void enterEvent(QEvent *me) override;
 
     // Visual properties of the variable
     // Excliding border color, as it is chosen from the table
     // In order to keep unity
     void setRadius(int newRadius);
     void setOffset(int newOffset);
-    int getRadius() const;
-    int getOffset() const;
     void setVarName(const QString &newName);
     void setVarName(const QString &&newName);
     void setVarDescription(const QString &newDescription);
     void setVarDescription(const QString &&newDescription);
-    const QString &getVarName() const;
-    const QString &getVarDescription() const;
 
     void setUpBorder();
     void setRealKeyName(const QString &name);
@@ -56,6 +66,7 @@ protected:
 
     void visualPrepare(const QString &name);
     void visualPrepare(const QString &&name);
+    virtual void prepareParamPanel();
 
 private:
     QColor borderColor; // Border color depends on current data type
@@ -67,6 +78,7 @@ private:
 
     // NodeParams UI
     DataProperties *basicDataProps;
+    LabeledInput *debugValue;
 
 public slots:
     void becomeInactive() override;

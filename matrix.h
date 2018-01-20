@@ -5,14 +5,12 @@
 #include <stdexcept>
 #include <QVector3D>
 
-// TODO: сделать конструктор копирования explicit, добавить move-семантику
-// Мне очень лень, но это увеличит скорость выполнения
 class Matrix
 {
 public:
     Matrix(size_t dimx, size_t dimy);
     explicit Matrix(const Matrix &other);
-    Matrix(const Matrix &&other);
+    Matrix(Matrix &&other);
     explicit Matrix(const QVector3D &vec);
     Matrix(const QVector3D &&vec);
     ~Matrix();
@@ -29,14 +27,19 @@ public:
     Matrix &operator*=(double scalar);
     Matrix &operator/=(double scalar);
     Matrix &operator*=(Matrix &other) throw(std::invalid_argument);
+    Matrix &operator*=(Matrix &&other) throw(std::invalid_argument);
 
     Matrix operator+(const Matrix &other) throw(std::invalid_argument);
     Matrix operator*(double scalar);
     Matrix operator*(Matrix &other) throw(std::invalid_argument);
+    Matrix operator*(Matrix &&other) throw(std::invalid_argument);
 
     Matrix &transpose() throw(std::invalid_argument);
     Matrix &reverse() throw(std::invalid_argument);
-    double determinator() throw(std::out_of_range);
+    double determinator() throw(std::invalid_argument);
+
+    Matrix transposed() throw(std::invalid_argument);
+    Matrix reversed() throw(std::invalid_argument);
 
 #define DEBUG
 #ifdef DEBUG

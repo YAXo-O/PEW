@@ -11,7 +11,7 @@ public:
     ~TestNode() override;
 
 public slots:
-    //void enable(BaseNode *caller = nullptr) override;
+    void enable(BaseNode *caller = nullptr) override;
 
 private:
     ExternalVariable *read;

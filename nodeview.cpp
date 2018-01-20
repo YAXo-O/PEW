@@ -1,14 +1,12 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include "nodeview.h"
-#include "Nodes/nodedata.h"
-#include "Nodes/BasicNodes/testnode.h"
+#include "worldinfo.h"
 
-#include "Nodes/Data/booldata.h"
-#include "Nodes/Data/intdata.h"
-#include "Nodes/Data/floatdata.h"
-#include "Nodes/Data/sceneobjectdata.h"
-#include "Nodes/Data/vectordata.h"
+#include "Nodes/nodedata.h"
+#include "Nodes/Data/alldata.h"
+#include "Nodes/BasicNodes/testnode.h"
+#include "Nodes/BasicNodes/createcamera.h"
 
 #define DEBUG
 #ifdef DEBUG
@@ -16,11 +14,11 @@
 #endif
 
 NodeView::NodeView(QWidget *parent): PEWWidget(parent), currentMovable(nullptr), renderer(new OutNode("Renderer")),
-    currentConnection(nullptr)
+    currentConnection(nullptr), currentDataConnection(nullptr)
 {
      addMovable(renderer);
-     addMovable(new TestNode("Base"));
-     addMovable(new BoolData());
+     addMovable(new CameraData());
+     addMovable(new CreateCamera());
      renderer->move(200, 200);
 }
 
@@ -34,6 +32,7 @@ void NodeView::addMovable(Movable *movable)
 {
     if(movable)
     {
+        connect(this, SIGNAL(resetMovables()), movable, SLOT(resetMovable()));
         movable->setParent(this);
         movable->show();
         movable->connectToViewer(this);
@@ -46,10 +45,33 @@ void NodeView::removeMovable(Movable *movable)
 {
     if(movable && movable->parentWidget() == this)
     {
+        disconnect(movable, SLOT(resetMovable()));
+        if(movable == currentMovable)
+            deselectMovable();
         movable->setParent(nullptr);
-        movable->disconnectFromViewer();
         if(movable->type() == movableNode)
+        {
             freeNodes.removeOne(static_cast<BaseNode *>(movable));
+            for(auto i = nodeConnectionsBegin(); i != nodeConnectionsEnd(); i++)
+                if((*i)->getStart()->parentWidget() == movable || (*i)->getEnd()->parentWidget() == movable)
+                    nConnections.removeOne(*i);
+            // Remove its data connections
+        }
+        else if(movable->type() == movableData)
+        {
+            bool bUpdate = false;
+            for(auto i = dataConnectionsBegin(); i != dataConnectionsEnd(); i++)
+                if((*i)->getData() == movable)
+                {
+                    dConnections.removeOne(*i);
+                    bUpdate = true;
+                }
+
+            if(bUpdate)
+                repaint();
+        }
+
+        //WorldInfo::getInstance().getViewport()->repaint();
     }
 }
 
@@ -58,6 +80,16 @@ void NodeView::deleteMovable(Movable *&movable)
     removeMovable(movable);
     delete movable;
     movable = nullptr;
+}
+
+void NodeView::killMovable(Movable *movable)
+{
+    if(movable == renderer)
+        return;
+
+    removeMovable(movable);
+    if(movable->getDeletable())
+        delete movable;
 }
 
 const QList<NodeConnection *>::const_iterator NodeView::nodeConnectionsBegin() const
@@ -70,6 +102,16 @@ const QList<NodeConnection *>::const_iterator NodeView::nodeConnectionsEnd() con
     return nConnections.end();
 }
 
+const QList<DataConnection *>::const_iterator NodeView::dataConnectionsBegin() const
+{
+    return dConnections.begin();
+}
+
+const QList<DataConnection *>::const_iterator NodeView::dataConnectionsEnd() const
+{
+    return dConnections.end();
+}
+
 void NodeView::movableSelected(Movable *movable)
 {
     if((movable != currentMovable) && currentMovable)
@@ -80,41 +122,59 @@ void NodeView::movableSelected(Movable *movable)
 
 void NodeView::getBuffer(QImage *&buffer)
 {
-    for(auto i:freeNodes)
-        i->enable();
     renderer->renderFrame(buffer);
 }
 
 void NodeView::startConnectionData(DataPin *pin)
 {
-    if(!pin && currentDataConnection.getPin())
+    if(currentConnection)
+        return;
+    if(!currentDataConnection)
+        currentDataConnection = new DataConnection();
+    if(!pin && currentDataConnection->getPin())
         resetConnectionData();
-    else if(!currentDataConnection.getPin())
-        currentDataConnection.setPin(pin);
+    else if(!currentDataConnection->getPin())
+        currentDataConnection->setPin(pin);
 }
 
 void NodeView::endConnectionData(NodeData *node)
 {
-    if(!node && currentDataConnection.getData())
+    if(!currentDataConnection)
+        return;
+    if(!node && currentDataConnection->getData())
         resetConnectionData();
-    else if(node && currentDataConnection.getPin())
+    else if(node && currentDataConnection->getPin())
     {
-        if(currentDataConnection.getData())
-            delete currentDataConnection.getData();
-        currentDataConnection.setData(node);
-        currentDataConnection.getPin()->setData(node);
-        resetConnectionData();
+        if(node->dataType() != currentDataConnection->getPin()->getType())
+            return;
+        if(currentDataConnection->getData())
+            delete currentDataConnection->getData();
+        currentDataConnection->setData(node);
+        currentDataConnection->getPin()->setData(node);
+        node->setDeletable(false);
+        dConnections.append(currentDataConnection);
+        currentDataConnection = nullptr;
+
+        //WorldInfo::getInstance().getViewport()->repaint();
     }
 }
 
 void NodeView::resetConnectionData()
 {
-    currentDataConnection.setData(nullptr);
-    currentDataConnection.setPin(nullptr);
+    currentDataConnection->setData(nullptr);
+    currentDataConnection->setPin(nullptr);
+}
+
+void NodeView::simulate()
+{
+    for(auto i:freeNodes)
+        i->enable();
 }
 
 void NodeView::connectionStarts(BaseNode *starter, const QString &signal)
 {
+    if(currentDataConnection)
+        return;
     if(currentConnection)
         currentConnection->setStart(starter->getOutput(signal));
     else
@@ -158,10 +218,10 @@ void NodeView::mousePressEvent(QMouseEvent *me)
             currentConnection = nullptr;
             repaint();
         }
-        else if(currentDataConnection.getPin() && currentDataConnection.getData())
+        else if(currentDataConnection && currentDataConnection->getPin() && currentDataConnection->getData())
 
         {
-            delete currentDataConnection.getData();
+            delete currentDataConnection->getData();
             resetConnectionData();
             repaint();
         }
@@ -182,18 +242,23 @@ void NodeView::mouseMoveEvent(QMouseEvent *me)
         }
         repaint();
     }
-    else if(currentDataConnection.getPin())
+    else if(currentDataConnection)
     {
-        if(currentDataConnection.getData())
-            currentDataConnection.getData()->move(me->pos());
+        if(currentDataConnection->getData())
+            currentDataConnection->getData()->move(me->pos());
         else
         {
             NodeData *node = new NodeData();
             node->move(me->pos());
-            currentDataConnection.setData(node);
+            currentDataConnection->setData(node);
         }
         repaint();
     }
+}
+
+void NodeView::constructContextMenu()
+{
+
 }
 
 NodeConnection *NodeView::getCurrentConnection() const
@@ -201,7 +266,25 @@ NodeConnection *NodeView::getCurrentConnection() const
     return currentConnection;
 }
 
-const DataConnection &NodeView::getCurrentDataConnection() const
+DataConnection *NodeView::getCurrentDataConnection() const
 {
     return currentDataConnection;
+}
+
+void NodeView::deselectMovable()
+{
+    if(!currentMovable)
+        return;
+
+    currentMovable->becomeInactive();
+    currentMovable = nullptr;
+}
+
+void NodeView::selectMovable(Movable *newSelection)
+{
+    if(!newSelection)
+        return;
+
+    currentMovable = newSelection;
+    currentMovable->becomeActive();
 }

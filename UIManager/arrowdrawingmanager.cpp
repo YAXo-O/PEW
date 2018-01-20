@@ -1,4 +1,5 @@
 #include <QPainter>
+#include <QVector2d>
 #include "arrowdrawingmanager.h"
 #include "../Nodes/pinproperties.h"
 
@@ -64,14 +65,27 @@ void ArrowDrawingManager::drawCurrentNodeLine(QPainter *painter)
 
 void ArrowDrawingManager::drawDataLines(QPainter *painter)
 {
+    for(auto i = parent->dataConnectionsBegin(); i != parent->dataConnectionsEnd(); i++)
+    {
+        QPoint start = (*i)->getPin()->pos() + (*i)->getPin()->parentWidget()->pos() +
+                QPoint(pinSize.width()/2, pinSize.height()/2);
+        NodeData *node = (*i)->getData();
+        QPoint end = node->pos() + QPoint(node->width()/2, node->height()/2);
+
+        QVector2D ray(end-start);
+        QVector2D intersection = ray - ray.normalized()*node->getRadius();
+
+        painter->setPen((*i)->getPin()->getColor());
+        painter->drawLine(start, QPoint(start.x() + intersection.x(), start.y() + intersection.y()));
+    }
 }
 
 void ArrowDrawingManager::drawCurrentDataLine(QPainter *painter)
 {
-    if(parent->getCurrentDataConnection().getPin() && parent->getCurrentDataConnection().getData())
+    if(parent->getCurrentDataConnection())
     {
-        DataPin *pin = parent->getCurrentDataConnection().getPin();
-        NodeData *node = parent->getCurrentDataConnection().getData();
+        DataPin *pin = parent->getCurrentDataConnection()->getPin();
+        NodeData *node = parent->getCurrentDataConnection()->getData();
         if(pin && node)
         {
             QPoint start = pin->pos() + pin->parentWidget()->pos() + QPoint(pinSize.width()/2, pinSize.height()/2);

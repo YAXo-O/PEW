@@ -1,12 +1,24 @@
 #include <QPainter>
+#include <QDebug>
+#include "../datapin.h"
 #include "readonlystate.h"
 
-ReadOnlyState::ReadOnlyState(QWidget *parent): DataPinState(parent)
+ReadOnlyState::ReadOnlyState(DataPin *parent): DataPinState(parent)
 {
 }
 
 ReadOnlyState::~ReadOnlyState()
 {
+}
+
+const void *ReadOnlyState::readValue()
+{
+    return getParent()->getData() ? getParent()->getData()->getData() : nullptr;
+}
+
+void ReadOnlyState::writeValue(void *)
+{
+    qDebug() << "Writing is forbidden!";
 }
 
 void ReadOnlyState::paint(QPainter *p)

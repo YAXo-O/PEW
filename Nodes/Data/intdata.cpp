@@ -9,6 +9,11 @@ IntData::~IntData()
 {
 }
 
+bool IntData::isPresent() const
+{
+    return true;
+}
+
 const void *IntData::getData()
 {
     return &data;

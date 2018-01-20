@@ -6,6 +6,8 @@
 #include "../worldinfo.h"
 #include "../nodeview.h"
 
+#include <QDebug>
+
 DataPin::DataPin(const QString &_name, const char *_type, dataFlowFlag direction, QWidget *parent) : QWidget(parent),
      name(_name), type(_type), dir(direction), pinColour(200, 0, 200), data(nullptr)
 {
@@ -77,7 +79,7 @@ void DataPin::breakConnections()
         disconnect(this, SIGNAL(dataConnection(DataPin*)));
 }
 
-void *DataPin::readValue()
+const void *DataPin::readValue()
 {
     return state->readValue();
 }
@@ -85,6 +87,16 @@ void *DataPin::readValue()
 void DataPin::writeValue(void *value)
 {
     state->writeValue(value);
+}
+
+bool DataPin::isConnected() const
+{
+    return data != nullptr;
+}
+
+bool DataPin::isDataPresent() const
+{
+    return data != nullptr && data->isPresent();
 }
 
 void DataPin::paintEvent(QPaintEvent *)
@@ -101,10 +113,16 @@ void DataPin::paintEvent(QPaintEvent *)
 
 void DataPin::mousePressEvent(QMouseEvent *me)
 {
-    if(me->button() & Qt::LeftButton && me->modifiers() == 0)
+    if(me->button() & Qt::LeftButton && me->modifiers() == 0 && !data)
         emit dataConnection(this);
 
     QWidget::mouseMoveEvent(me);
+}
+
+void DataPin::nodeKilled(Movable *node)
+{
+    data = nullptr;
+    delete node;
 }
 
 NodeData *DataPin::getData() const
@@ -115,6 +133,8 @@ NodeData *DataPin::getData() const
 void DataPin::setData(NodeData *_data)
 {
     data = _data;
+    if(data)
+        connect(data, SIGNAL(killMe(Movable*)), this, SLOT(nodeKilled(Movable*)));
 }
 
 const char *DataPin::getType()
