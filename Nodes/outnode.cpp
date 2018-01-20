@@ -60,26 +60,50 @@ void OutNode::enable(BaseNode *)
         p.drawText(QRect(0, 0, frame->width(), frame->height()), Qt::AlignCenter, "No camera specified!");
 
         p.end();
+
+        info.getViewport()->repaint();
     }
     else
     {
         // Have to create preview(for viewport)
+        RenderStatus &stat = info.getRenderStatus();
+
+        QMetaObject::Connection con;
+        con = connect(camera, &Camera::drewLine,
+                               [&stat, &info](float progress)mutable
+                                {
+                                    stat.setDisplayProgress(progress * 100);
+                                    info.getViewport()->repaint();
+                                });
+        stat.show();
         camera->setSize(frame->size());
         camera->setResolution(frame->size());
         camera->renderScene(*frame);
+        disconnect(con);
 
         // And render to file
         renderOptions *options = (renderOptions *)(container->getValue());
-        QImage output(options->res, QImage::Format_RGB32);
+        if(options->bRender)
+        {
+            QImage output(options->res, QImage::Format_RGB32);
 
-        camera->setSize(options->res);
-        camera->setResolution(options->res);
-        camera->renderScene(output);
+            con = connect(camera, &Camera::drewLine,
+                                   [&stat](float progress)mutable
+                                    {
+                                        stat.setRenderProgress(progress * 100);
+                                    });
 
-        if(!output.save(options->path + QString("frame_") + QString::number(info.getCurrentFrame()) + ".png"))
-            QMessageBox::warning(this, "Write file error", "Can not write file!\n Check path and format!\n");
+            camera->setSize(options->res);
+            camera->setResolution(options->res);
+            camera->renderScene(output);
+            disconnect(con);
+
+
+            if(!output.save(options->path + QString("frame_") + QString::number(info.getCurrentFrame()) + ".png"))
+                QMessageBox::warning(this, "Write file error", "Can not write file!\n Check path and format!\n");
+        }
+        stat.hide();
     }
 
     BaseNode::enable();
-    info.getViewport()->repaint();
 }

@@ -11,6 +11,7 @@
 #include "tracinginfo.h"
 #include "CompulsorySceneObjects/baselight.h"
 #include "texturemanager.h"
+#include "renderstatus.h"
 
 class NodeData;
 class QVector3D;
@@ -35,6 +36,8 @@ public:
 
     void setNodeParams(PEWWidget *nodeParams);
     PEWWidget *getNodeParams() const;
+
+    RenderStatus &getRenderStatus();
 
     void registerObject(SceneObject *appendee);
     void removeObject(SceneObject *removee);
@@ -70,6 +73,7 @@ private:
     QList<SceneObject *> objects;
     QList<BaseLight *> lights;
     TextureManager *tManager;
+    RenderStatus stat;
 
 public slots:
     void changeCurrentFrame(unsigned newCF);

@@ -89,6 +89,7 @@ QColor Material::getColor(traceIntersectInfo &info, const QVector3D &)
             materialDiffuseColor += currentDiffuse;
             materialSpecularColor += currentSpecular;
         }
+
     }
 
     color += materialDiffuseColor;

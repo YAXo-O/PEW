@@ -94,15 +94,15 @@ void MainWindow::prepareScene()
     QImage &texture = manager.getTexture("./checker.jpg");
 
     OBJFileParser parser;
-    WireframeMesh *mesh = parser.load("./sphere.obj");
+    WireframeMesh *mesh = parser.load("./planes.obj");
     WireframeMeshInstance *instance = new WireframeMeshInstance(mesh);
     instance->material().getDiffuse().setTexture(&texture);
     instance->material().getAmbient().setTexture(&texture);
-    instance->material().getAmbient().setIndex(.1);
+    instance->material().getAmbient().setIndex(.05);
     wifo.registerObject(instance);
 
     BaseLight *light = new BaseLight({QVector3D(40, -100, 100), Qt::red, 6800}, nullptr);
-    BaseLight *backLight = new BaseLight({QVector3D(40, 100, 100), Qt::blue, 6800}, nullptr);
+    //BaseLight *backLight = new BaseLight({QVector3D(40, 100, 100), Qt::blue, 6800}, nullptr);
     wifo.registerObject(light);
-    wifo.registerObject(backLight);
+    //wifo.registerObject(backLight);
 }

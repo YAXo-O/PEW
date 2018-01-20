@@ -88,7 +88,8 @@ SOURCES += main.cpp\
     Nodes/NodesWidgets/outnodewidget.cpp \
     Nodes/NodesWidgets/outnodeparamscontainer.cpp \
     Renderer/renderer.cpp \
-    Renderer/raytracemultithreadrenderer.cpp
+    Renderer/raytracemultithreadrenderer.cpp \
+    renderstatus.cpp
 
 HEADERS  += mainwindow.h \
     pewwidget.h \
@@ -156,6 +157,8 @@ HEADERS  += mainwindow.h \
     Nodes/NodesWidgets/outnodewidget.h \
     Nodes/NodesWidgets/outnodeparamscontainer.h \
     Renderer/renderer.h \
-    Renderer/raytracemultithreadrenderer.h
+    Renderer/raytracemultithreadrenderer.h \
+    renderstatus.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    renderstatus.ui

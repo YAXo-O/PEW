@@ -4,6 +4,7 @@
 #include <QWidget>
 
 class QLineEdit;
+class QCheckBox;
 
 class OutNodeWidget : public QWidget
 {
@@ -13,12 +14,13 @@ public:
 
     QString getPath() const;
     QSize getRes() const;
+    bool getRender() const;
 
 private:
     QLineEdit *path;
     QLineEdit *xRes;
     QLineEdit *yRes;
-
+    QCheckBox *renderToFile;
 };
 
 #endif // OUTNODEWIDGET_H

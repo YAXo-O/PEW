@@ -49,32 +49,27 @@ CameraDataWidget::CameraDataWidget(QWidget *parent) : QWidget(parent),
 
     QDoubleValidator *doubleValidator = new QDoubleValidator();
 
-    QHBoxLayout *xLayout = new QHBoxLayout;
-    xLayout->addWidget(xLab);
-    xLayout->addWidget(xLine);
+    QHBoxLayout *coordsLayout = new QHBoxLayout;
+    location->setLayout(coordsLayout);
+
+    coordsLayout->addWidget(xLab);
+    coordsLayout->addWidget(xLine);
     xLine->setValidator(doubleValidator);
     xLab->setText("X: ");
     xLine->setText("200");
 
-    QHBoxLayout *yLayout = new QHBoxLayout;
-    yLayout->addWidget(yLab);
-    yLayout->addWidget(yLine);
+    coordsLayout->addWidget(yLab);
+    coordsLayout->addWidget(yLine);
     yLine->setValidator(doubleValidator);
     yLab->setText("Y: ");
     yLine->setText("0");
 
-    QHBoxLayout *zLayout = new QHBoxLayout;
-    zLayout->addWidget(zLab);
-    zLayout->addWidget(zLine);
+    coordsLayout->addWidget(zLab);
+    coordsLayout->addWidget(zLine);
     zLine->setValidator(doubleValidator);
     zLab->setText("Z: ");
     zLine->setText("0");
 
-    QVBoxLayout *locationLayout = new QVBoxLayout;
-    locationLayout->addLayout(xLayout);
-    locationLayout->addLayout(yLayout);
-    locationLayout->addLayout(zLayout);
-    location->setLayout(locationLayout);
 
     location->setTitle("Camera location");
     cameraLayout->addWidget(location);

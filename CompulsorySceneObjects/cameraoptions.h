@@ -17,6 +17,7 @@ struct renderOptions
 {
     QString path;
     QSize res;
+    bool bRender;
 };
 
 #endif // CAMERAOPTIONS_H

@@ -13,6 +13,7 @@ const void *OutNodeParamsContainer::getValue()
     {
         data.path = widget->getPath();
         data.res = widget->getRes();
+        data.bRender = widget->getRender();
 
         return &data;
     }

@@ -108,9 +108,9 @@ bool WireframeMesh::blocks(const QVector3D &origin, const QVector3D &dir, float 
         QVector3D B = verticies[i.verts[1]];
         QVector3D C = verticies[i.verts[2]];
 
-        QVector3D V = (A - origin).normalized();
+        QVector3D V = (A - origin);
 
-        QVector3D normal =  QVector3D::crossProduct(A - B, A - C).normalized();
+        QVector3D normal =  QVector3D::crossProduct(A - B, A - C);
 
         double distanceAlongNormal = QVector3D::dotProduct(normal, V);
         double reachability = QVector3D::dotProduct(normal, dir);

@@ -1,5 +1,6 @@
 #include <QPainter>
 #include <QImage>
+#include <QDebug>
 
 #include "raytracemultithreadrenderer.h"
 #include "../worldinfo.h"
@@ -7,7 +8,6 @@
 
 RayTraceMultiThreadRenderer::RayTraceMultiThreadRenderer(QObject *parent): Renderer(parent)
 {
-
 }
 
 void RayTraceMultiThreadRenderer::setSteps(int _xStep, int _yStep)
@@ -44,24 +44,24 @@ void RayTraceMultiThreadRenderer::setOrigin(const QVector3D &_origin)
 void RayTraceMultiThreadRenderer::start()
 {
     QImage img = QImage(xRes, 1, QImage::Format_RGB32);
-    QPainter p(&img);
 
-    QVector3D xBasis = (rightTop - leftTop)/xRes*xStep;
-    QVector3D yBasis = (leftBottom - leftTop)/yRes*yStep;
+    QVector3D xBasis = (rightTop - leftTop)/xRes;
+    QVector3D yBasis = (leftBottom - leftTop)/yRes;
     WorldInfo &wi = WorldInfo::getInstance();
     rayTraceInfo closestIntersection;
 
-    for(int y = yStart; y < yRes; y++)
+    for(int y = yStart; y < yRes; y += yStep)
     {
-        for(int x = xStart; x < xRes; x++)
+        for(int x = xStart; x < xRes; x += xStep)
         {
             QVector3D planePoint = (xBasis*x + yBasis*y + leftTop);
             QVector3D rayDirection = (planePoint - origin);
             closestIntersection.bIntersects = false;
 
-            for(auto i:wi)
+            //for(auto i:wi)
+            for(auto i = wi.begin(); i != wi.end(); i++)
             {
-                rayTraceInfo intersection = i->intersect(origin, rayDirection);
+                rayTraceInfo intersection = (*i)->intersect(origin, rayDirection);
                 if(intersection.bIntersects)
                 {
                     if(closestIntersection.bIntersects == false || closestIntersection.param > intersection.param)
@@ -70,18 +70,12 @@ void RayTraceMultiThreadRenderer::start()
             }
 
             if(closestIntersection.bIntersects)
-            {
-                p.setPen(closestIntersection.color);
-                p.drawPoint(x, y);
-            }
+                img.setPixelColor(x, 0, closestIntersection.color);
             else
-            {
-                p.setPen(Qt::darkGray);
-                p.drawPoint(x, 0);
-            }
+                img.setPixelColor(x, 0, Qt::gray);
         }
         emit lineRendered(img, 0, y);
     }
 
-    p.end();
+    emit finished();
 }

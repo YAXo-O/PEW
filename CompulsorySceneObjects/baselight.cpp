@@ -47,11 +47,14 @@ const char *BaseLight::type_s()
 
 bool BaseLight::lightsPoint(const QVector3D &point)
 {
+    const double eps = 1e-3;
     WorldInfo &instance = WorldInfo::getInstance();
     QVector3D dir = point - lightProperties.position;
+    double len = dir.length() - eps;
+    dir.normalize();
 
     for(auto i : instance)
-        if((*i).blocks(lightProperties.position, dir, point))
+        if((*i).blocks(lightProperties.position, dir, len))
             return false;
 
     return true;

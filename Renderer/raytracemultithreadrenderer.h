@@ -10,6 +10,7 @@ class RayTraceMultiThreadRenderer : public Renderer
 {
     Q_OBJECT
 
+public:
     explicit RayTraceMultiThreadRenderer(QObject *parent = nullptr);
     virtual ~RayTraceMultiThreadRenderer() {}
 
@@ -24,7 +25,6 @@ public slots:
     void start() override;
 
 signals:
-    void finished();
     void lineRendered(QImage line, int x, int y);
 
 private:

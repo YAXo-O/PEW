@@ -4,11 +4,12 @@
 #include <QVBoxLayout>
 #include <QIntValidator>
 #include <QGroupBox>
+#include <QCheckBox>
 
 #include "outnodewidget.h"
 
 OutNodeWidget::OutNodeWidget(QWidget *parent) : QWidget(parent), path(new QLineEdit("./Out/")),
-    xRes(new QLineEdit("1280")), yRes(new QLineEdit("720"))
+    xRes(new QLineEdit("1280")), yRes(new QLineEdit("720")), renderToFile(new QCheckBox("Render to file"))
 {
     QLabel *pathLab = new QLabel("Directory for render: ");
     QLabel *xResLab = new QLabel("X resolution: ");
@@ -24,6 +25,10 @@ OutNodeWidget::OutNodeWidget(QWidget *parent) : QWidget(parent), path(new QLineE
     group->setLayout(groupLayout);
     QVBoxLayout *general = new QVBoxLayout();
     setLayout(general);
+
+    // Render?
+    renderToFile->setChecked(false);
+    groupLayout->addWidget(renderToFile);
 
     // Path
     QHBoxLayout *pathLayout = new QHBoxLayout();
@@ -54,4 +59,9 @@ QString OutNodeWidget::getPath() const
 QSize OutNodeWidget::getRes() const
 {
     return QSize(xRes->text().toInt(), yRes->text().toInt());
+}
+
+bool OutNodeWidget::getRender() const
+{
+    return renderToFile->isChecked();
 }

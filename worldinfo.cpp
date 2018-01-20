@@ -49,6 +49,11 @@ PEWWidget *WorldInfo::getNodeParams() const
     return nodeParams;
 }
 
+RenderStatus &WorldInfo::getRenderStatus()
+{
+    return stat;
+}
+
 void WorldInfo::registerObject(SceneObject *appendee)
 {
     if(!appendee)

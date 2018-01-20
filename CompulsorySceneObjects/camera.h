@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include <QSize>
+#include <QImage>
 #include "../sceneobject.h"
 #include "../Model/model.h"
 
@@ -32,6 +33,10 @@ public slots:
     void setSize(const QSize &newSize);
     void renderScene(QImage &img);
 
+private slots:
+    void threadDied();
+    void drawLine(QImage line, int x, int y);
+
 protected:
     QVector3D leftTop, rightTop, leftBottom; // Point of our projection plane
     QVector3D origin; // Point, from which we observe the world
@@ -41,7 +46,15 @@ protected:
     // Visual representation; For rendering from other cameras
     Model *cameraModel;
 
+    // Multithreading
+    int activeThreads;
+    QImage *buf;
+    int linesDrew;
+
     void resetRotation();
+
+signals:
+    void drewLine(double progress);
 
 };
 
