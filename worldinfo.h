@@ -52,6 +52,9 @@ public:
     bool isBlocked(const QVector3D &origin, const QVector3D &dir, const QVector3D &exclude);
     TextureManager &textureManager();
 
+    unsigned getCurrentFrame() const;
+
+
 protected:
     WorldInfo();
 

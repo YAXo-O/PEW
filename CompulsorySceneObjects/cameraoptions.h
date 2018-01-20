@@ -2,6 +2,7 @@
 #define CAMERAOPTIONS_H
 
 #include <QVector3D>
+#include <QSize>
 
 struct cameraOptions
 {
@@ -10,6 +11,12 @@ struct cameraOptions
     int yaw = 0;
     QVector3D location;
     float fov;
+};
+
+struct renderOptions
+{
+    QString path;
+    QSize res;
 };
 
 #endif // CAMERAOPTIONS_H

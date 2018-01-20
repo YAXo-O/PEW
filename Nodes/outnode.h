@@ -4,6 +4,7 @@
 #include <QTimer>
 #include "basenode.h"
 #include "../CompulsorySceneObjects/camera.h"
+#include "./NodesWidgets/outnodeparamscontainer.h"
 
 class ExternalVariable;
 
@@ -24,6 +25,7 @@ private:
     QImage *frame;
     ExternalVariable *cam;
     QTimer refreshTimer;
+    OutNodeParamsContainer *container;
 };
 
 #endif // OUTNODE_H

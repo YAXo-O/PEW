@@ -7,6 +7,7 @@ class NodeParamsContainer
 {
 public:
     NodeParamsContainer(QWidget *paramsPanel);
+    virtual ~NodeParamsContainer() {}
 
     QWidget *getParamsPanel() const;
 

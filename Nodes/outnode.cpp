@@ -1,5 +1,7 @@
 #include <QPainter>
 #include <QThread>
+#include <QLayout>
+#include <QMessageBox>
 #include "outnode.h"
 #include "../worldinfo.h"
 #include "externalvariablefactory.h"
@@ -15,11 +17,16 @@ OutNode::OutNode(QString nodeName, QWidget *parent): BaseNode(nodeName, parent),
 {
     addDataPin(cam->getPin());
     rearangePins();
+
+    OutNodeWidget *props = new OutNodeWidget;
+    container = new OutNodeParamsContainer(props);
+    getParamPanel()->layout()->addWidget(props);
 }
 
 OutNode::~OutNode()
 {
     delete frame;
+    delete container;
 }
 
 void OutNode::renderFrame(QImage *&_frame)
@@ -29,10 +36,11 @@ void OutNode::renderFrame(QImage *&_frame)
 
 void OutNode::enable(BaseNode *)
 {
+    WorldInfo &info = WorldInfo::getInstance();
     // Updating frame
     if(frame)
         delete frame;
-    frame = new QImage(WorldInfo::getInstance().getViewport()->size(), QImage::Format_ARGB32);
+    frame = new QImage(info.getViewport()->size(), QImage::Format_ARGB32);
 
     Camera *camera = nullptr;
     if(cam && cam->isDataPresent())
@@ -55,11 +63,23 @@ void OutNode::enable(BaseNode *)
     }
     else
     {
+        // Have to create preview(for viewport)
         camera->setSize(frame->size());
         camera->setResolution(frame->size());
         camera->renderScene(*frame);
+
+        // And render to file
+        renderOptions *options = (renderOptions *)(container->getValue());
+        QImage output(options->res, QImage::Format_RGB32);
+
+        camera->setSize(options->res);
+        camera->setResolution(options->res);
+        camera->renderScene(output);
+
+        if(!output.save(options->path + QString("frame_") + QString::number(info.getCurrentFrame()) + ".png"))
+            QMessageBox::warning(this, "Write file error", "Can not write file!\n Check path and format!\n");
     }
 
     BaseNode::enable();
-    WorldInfo::getInstance().getViewport()->repaint();
+    info.getViewport()->repaint();
 }

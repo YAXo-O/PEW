@@ -141,6 +141,11 @@ TextureManager &WorldInfo::textureManager()
     return *tManager;
 }
 
+unsigned WorldInfo::getCurrentFrame() const
+{
+    return currentFrame;
+}
+
 void WorldInfo::setViewport(Viewport *&value)
 {
     viewport = value;

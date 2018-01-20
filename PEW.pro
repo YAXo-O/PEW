@@ -84,7 +84,9 @@ SOURCES += main.cpp\
     WidgetUtilities/Parsers/objfileparser.cpp \
     WidgetUtilities/Utilities/stringconverter.cpp \
     externalmath.cpp \
-    Model/ParametricSpheres/sphere.cpp
+    Model/ParametricSpheres/sphere.cpp \
+    Nodes/NodesWidgets/outnodewidget.cpp \
+    Nodes/NodesWidgets/outnodeparamscontainer.cpp
 
 HEADERS  += mainwindow.h \
     pewwidget.h \
@@ -148,6 +150,8 @@ HEADERS  += mainwindow.h \
     WidgetUtilities/Parsers/objfileparser.h \
     WidgetUtilities/Utilities/stringconverter.h \
     externalmath.h \
-    Model/ParametricSpheres/sphere.h
+    Model/ParametricSpheres/sphere.h \
+    Nodes/NodesWidgets/outnodewidget.h \
+    Nodes/NodesWidgets/outnodeparamscontainer.h
 
 FORMS    += mainwindow.ui
