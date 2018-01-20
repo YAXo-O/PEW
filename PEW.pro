@@ -86,7 +86,9 @@ SOURCES += main.cpp\
     externalmath.cpp \
     Model/ParametricSpheres/sphere.cpp \
     Nodes/NodesWidgets/outnodewidget.cpp \
-    Nodes/NodesWidgets/outnodeparamscontainer.cpp
+    Nodes/NodesWidgets/outnodeparamscontainer.cpp \
+    Renderer/renderer.cpp \
+    Renderer/raytracemultithreadrenderer.cpp
 
 HEADERS  += mainwindow.h \
     pewwidget.h \
@@ -152,6 +154,8 @@ HEADERS  += mainwindow.h \
     externalmath.h \
     Model/ParametricSpheres/sphere.h \
     Nodes/NodesWidgets/outnodewidget.h \
-    Nodes/NodesWidgets/outnodeparamscontainer.h
+    Nodes/NodesWidgets/outnodeparamscontainer.h \
+    Renderer/renderer.h \
+    Renderer/raytracemultithreadrenderer.h
 
 FORMS    += mainwindow.ui
