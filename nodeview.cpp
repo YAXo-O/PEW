@@ -20,6 +20,8 @@ NodeView::NodeView(QWidget *parent): PEWWidget(parent), currentMovable(nullptr),
      addMovable(new CameraData());
      addMovable(new CreateCamera());
      renderer->move(200, 200);
+
+     initMenu();
 }
 
 NodeView::~NodeView()
@@ -256,9 +258,82 @@ void NodeView::mouseMoveEvent(QMouseEvent *me)
     }
 }
 
-void NodeView::constructContextMenu()
+void NodeView::contextMenuEvent(QContextMenuEvent *ce)
 {
+    contextMenu.exec(ce->globalPos());
+}
 
+void NodeView::initMenu()
+{
+    contextMenu.addAction("Create Node");
+    contextMenu.addSeparator();
+
+    contextManager.setActionMenu(contextMenu.addMenu("Action"));
+    contextManager.setVariableMenu(contextMenu.addMenu("Variable"));
+
+    createBaseActions();
+    createBaseVars();
+}
+
+void NodeView::createBaseVars()
+{
+    // Creating basic vars
+
+    contextManager.addVariable("Bool", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        BoolData *data = new BoolData();
+        nv->addMovable(data);
+        data->move(pos - nv->pos());
+
+    }));
+
+    contextManager.addVariable("Int", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        IntData *data = new IntData();
+        nv->addMovable(data);
+        data->move(pos - nv->pos());
+
+    }));
+
+    contextManager.addVariable("Float", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        FloatData *data = new FloatData();
+        nv->addMovable(data);
+        data->move(pos - nv->pos());
+
+    }));
+
+    contextManager.addVariable("Vector", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        VectorData *data = new VectorData();
+        nv->addMovable(data);
+        data->move(pos - nv->pos());
+
+    }));
+
+    contextManager.addVariable("Camera", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        CameraData *data = new CameraData();
+        nv->addMovable(data);
+        data->move(pos - nv->pos());
+
+    }));
+}
+
+void NodeView::createBaseActions()
+{
+    contextManager.addAction("Create Camera", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        CreateCamera *node = new CreateCamera();
+        nv->addMovable(node);
+        node->move(pos - nv->pos());
+    }));
 }
 
 NodeConnection *NodeView::getCurrentConnection() const
@@ -287,4 +362,9 @@ void NodeView::selectMovable(Movable *newSelection)
 
     currentMovable = newSelection;
     currentMovable->becomeActive();
+}
+
+ContextMenuManager &NodeView::getManager()
+{
+    return contextManager;
 }

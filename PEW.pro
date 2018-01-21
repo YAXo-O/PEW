@@ -89,7 +89,9 @@ SOURCES += main.cpp\
     Nodes/NodesWidgets/outnodeparamscontainer.cpp \
     Renderer/renderer.cpp \
     Renderer/raytracemultithreadrenderer.cpp \
-    renderstatus.cpp
+    renderstatus.cpp \
+    ContextMenuFactory/menuactionfactory.cpp \
+    contextmenumanager.cpp
 
 HEADERS  += mainwindow.h \
     pewwidget.h \
@@ -158,7 +160,9 @@ HEADERS  += mainwindow.h \
     Nodes/NodesWidgets/outnodeparamscontainer.h \
     Renderer/renderer.h \
     Renderer/raytracemultithreadrenderer.h \
-    renderstatus.h
+    renderstatus.h \
+    ContextMenuFactory/menuactionfactory.h \
+    contextmenumanager.h
 
 FORMS    += mainwindow.ui \
     renderstatus.ui

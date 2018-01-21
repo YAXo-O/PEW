@@ -2,6 +2,7 @@
 #define NODEVIEW_H
 
 #include <QList>
+#include <QMenu>
 #include "pewwidget.h"
 #include "Nodes/basenode.h"
 #include "Nodes/outnode.h"
@@ -9,6 +10,7 @@
 #include "Nodes/datapin.h"
 #include "Nodes/nodedata.h"
 #include "Nodes/dataconnection.h"
+#include "contextmenumanager.h"
 
 class NodeView : public PEWWidget
 {
@@ -27,6 +29,8 @@ public:
 
     void deselectMovable(); // Deselect current movable;
     void selectMovable(Movable *newSelection);
+
+    ContextMenuManager &getManager();
 
 public slots:
     void movableSelected(Movable *movable);
@@ -52,8 +56,7 @@ private slots:
 protected:
     void mousePressEvent(QMouseEvent *me) override;
     void mouseMoveEvent(QMouseEvent *me) override;
-
-    void constructContextMenu();
+    void contextMenuEvent(QContextMenuEvent *ce) override;
 
 private:
     Movable *currentMovable;
@@ -65,6 +68,13 @@ private:
     QList<BaseNode *> freeNodes; // Unconnected nodes (nodes with no input)
     QList<NodeConnection *> nConnections; // All node connections being made so far
     QList<DataConnection *> dConnections;
+
+    QMenu contextMenu;
+    ContextMenuManager contextManager;
+
+    void initMenu();
+    void createBaseVars();
+    void createBaseActions();
 
 signals:
     void resetMovables();

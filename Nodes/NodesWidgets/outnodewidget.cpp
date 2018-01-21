@@ -5,6 +5,8 @@
 #include <QIntValidator>
 #include <QGroupBox>
 #include <QCheckBox>
+#include <QPushButton>
+#include <QFileDialog>
 
 #include "outnodewidget.h"
 
@@ -14,6 +16,12 @@ OutNodeWidget::OutNodeWidget(QWidget *parent) : QWidget(parent), path(new QLineE
     QLabel *pathLab = new QLabel("Directory for render: ");
     QLabel *xResLab = new QLabel("X resolution: ");
     QLabel *yResLab = new QLabel("Y resolution: ");
+    QPushButton *choosePB = new QPushButton("Choose...");
+
+    connect(choosePB, &QPushButton::clicked, [this]()mutable
+    {
+        path->setText(QFileDialog::getExistingDirectory(nullptr, "Save File dir", "./"));
+    });
 
     QIntValidator *val = new QIntValidator();
     xRes->setValidator(val);
@@ -26,7 +34,7 @@ OutNodeWidget::OutNodeWidget(QWidget *parent) : QWidget(parent), path(new QLineE
     QVBoxLayout *general = new QVBoxLayout();
     setLayout(general);
 
-    // Render?
+    // Render
     renderToFile->setChecked(false);
     groupLayout->addWidget(renderToFile);
 
@@ -34,6 +42,7 @@ OutNodeWidget::OutNodeWidget(QWidget *parent) : QWidget(parent), path(new QLineE
     QHBoxLayout *pathLayout = new QHBoxLayout();
     pathLayout->addWidget(pathLab);
     pathLayout->addWidget(path);
+    pathLayout->addWidget(choosePB);
     groupLayout->addLayout(pathLayout);
 
     QHBoxLayout *resLayout = new QHBoxLayout();
