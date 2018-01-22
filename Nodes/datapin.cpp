@@ -30,6 +30,7 @@ DataPin::DataPin(const QString &_name, const char *_type, dataFlowFlag direction
         break;
     }
 
+    setToolTip(_name);
     setConnections();
 }
 
@@ -69,7 +70,7 @@ void DataPin::setConnections()
 {
     NodeView *view = WorldInfo::getInstance().getNodeView();
     if(view)
-        connect(this, SIGNAL(dataConnection(DataPin*)), view, SLOT(addConnectionData(DataPin*)));
+        connect(this, SIGNAL(dataConnection(DataPin*)), view, SLOT(startConnectionData(DataPin*)));
 }
 
 void DataPin::breakConnections()
@@ -150,6 +151,7 @@ const QString &DataPin::getName() const
 void DataPin::setName(const QString &_name)
 {
     name = _name;
+    setToolTip(name);
 }
 
 void DataPin::setName(const QString &&_name)

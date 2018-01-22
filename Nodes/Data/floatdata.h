@@ -2,6 +2,7 @@
 #define FLOATDATA_H
 
 #include "../nodedata.h"
+#include "floatdatawidget.h"
 
 class FloatData : public NodeData
 {
@@ -16,8 +17,11 @@ public:
     const char *dataType() const override;
     static const char *dataType_s();
 
+    void prepareParamPanel() override;
+
 private:
     double data;
+    FloatDataWidget wid;
 };
 
 #endif // FLOATDATA_H

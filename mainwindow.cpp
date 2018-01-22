@@ -100,9 +100,4 @@ void MainWindow::prepareScene()
     instance->material().getAmbient().setTexture(&texture);
     instance->material().getAmbient().setIndex(.05);
     wifo.registerObject(instance);
-
-    BaseLight *light = new BaseLight({QVector3D(40, -100, 100), Qt::red, 6800}, nullptr);
-    //BaseLight *backLight = new BaseLight({QVector3D(40, 100, 100), Qt::blue, 6800}, nullptr);
-    wifo.registerObject(light);
-    //wifo.registerObject(backLight);
 }

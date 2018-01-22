@@ -4,6 +4,7 @@
 #include <QVector3D>
 
 #include "../nodedata.h"
+#include "./vectordatawidget.h"
 
 class VectorData : public NodeData
 {
@@ -20,6 +21,9 @@ public:
 
 private:
     QVector3D data;
+    VectorDataWidget wid;
+
+    void debugVector(const QVector3D &value);
 };
 
 #endif // VECTORDATA_H

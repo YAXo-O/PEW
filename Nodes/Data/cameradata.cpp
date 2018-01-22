@@ -1,11 +1,11 @@
 #include "cameradata.h"
-
-#include <QDebug>
+#include "../../worldinfo.h"
 
 CameraData::CameraData(QWidget *parent): NodeData(parent), data(nullptr)
 {
-    visualPrepare(getKeyName());
+    visualPrepare("camera");
     prepareParamPanel();
+    setDebugValue("Null");
 }
 
 CameraData::~CameraData()
@@ -30,9 +30,15 @@ const void *CameraData::getData()
 void CameraData::setData(const void *newData)
 {
     if(!newData)
+    {
         delete data;
+        setDebugValue("Null");
+
+        return;
+    }
 
     data = (Camera *)(newData);
+    setDebugValue("Camera is set");
 }
 
 const char *CameraData::dataType() const
@@ -47,22 +53,10 @@ const char *CameraData::dataType_s()
 
 void CameraData::resetMovable()
 {
+    WorldInfo::getInstance().removeObject(data);
     if(data)
         delete data;
+
     data = nullptr;
-}
-
-void CameraData::paintEvent(QPaintEvent *pe)
-{
-    NodeData::paintEvent(pe);
-
-    if(data)
-        setDebugValue("Camera is set: ");
-    else
-        setDebugValue("Null");
-}
-
-void CameraData::prepareParamPanel()
-{
-    NodeData::prepareParamPanel();
+    setDebugValue("Null");
 }

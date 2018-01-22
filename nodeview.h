@@ -31,6 +31,7 @@ public:
     void selectMovable(Movable *newSelection);
 
     ContextMenuManager &getManager();
+    QPoint convertSpace(QPoint global);
 
 public slots:
     void movableSelected(Movable *movable);

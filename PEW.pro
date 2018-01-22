@@ -91,7 +91,18 @@ SOURCES += main.cpp\
     Renderer/raytracemultithreadrenderer.cpp \
     renderstatus.cpp \
     ContextMenuFactory/menuactionfactory.cpp \
-    contextmenumanager.cpp
+    contextmenumanager.cpp \
+    Nodes/BasicNodes/createomnilight.cpp \
+    Nodes/Data/floatdatawidget.cpp \
+    Nodes/Data/floatdataparamscontainer.cpp \
+    Nodes/Data/intdatawidget.cpp \
+    Nodes/Data/intdataparamscontainer.cpp \
+    Nodes/Data/vectordatawidget.cpp \
+    Nodes/Data/vectorparamscontainer.cpp \
+    Nodes/Data/lightdata.cpp \
+    Nodes/Data/colordata.cpp \
+    Nodes/Data/colordatawidget.cpp \
+    Nodes/Data/colorparamscontainer.cpp
 
 HEADERS  += mainwindow.h \
     pewwidget.h \
@@ -162,7 +173,19 @@ HEADERS  += mainwindow.h \
     Renderer/raytracemultithreadrenderer.h \
     renderstatus.h \
     ContextMenuFactory/menuactionfactory.h \
-    contextmenumanager.h
+    contextmenumanager.h \
+    Nodes/BasicNodes/createomnilight.h \
+    Nodes/BasicNodes/actions.h \
+    Nodes/Data/floatdatawidget.h \
+    Nodes/Data/floatdataparamscontainer.h \
+    Nodes/Data/intdatawidget.h \
+    Nodes/Data/intdataparamscontainer.h \
+    Nodes/Data/vectordatawidget.h \
+    Nodes/Data/vectorparamscontainer.h \
+    Nodes/Data/lightdata.h \
+    Nodes/Data/colordata.h \
+    Nodes/Data/colordatawidget.h \
+    Nodes/Data/colorparamscontainer.h
 
 FORMS    += mainwindow.ui \
     renderstatus.ui

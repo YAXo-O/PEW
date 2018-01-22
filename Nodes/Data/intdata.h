@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include "../nodedata.h"
+#include "./intdatawidget.h"
 
 class IntData : public NodeData
 {
@@ -19,6 +20,7 @@ public:
 
 private:
     int32_t data;
+    IntDataWidget wid;
 };
 
 #endif // INTDATA_H

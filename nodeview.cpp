@@ -3,10 +3,8 @@
 #include "nodeview.h"
 #include "worldinfo.h"
 
-#include "Nodes/nodedata.h"
 #include "Nodes/Data/alldata.h"
-#include "Nodes/BasicNodes/testnode.h"
-#include "Nodes/BasicNodes/createcamera.h"
+#include "Nodes/BasicNodes/actions.h"
 
 #define DEBUG
 #ifdef DEBUG
@@ -16,12 +14,10 @@
 NodeView::NodeView(QWidget *parent): PEWWidget(parent), currentMovable(nullptr), renderer(new OutNode("Renderer")),
     currentConnection(nullptr), currentDataConnection(nullptr)
 {
-     addMovable(renderer);
-     addMovable(new CameraData());
-     addMovable(new CreateCamera());
-     renderer->move(200, 200);
+    addMovable(renderer);
+    renderer->move(200, 200);
 
-     initMenu();
+    initMenu();
 }
 
 NodeView::~NodeView()
@@ -311,7 +307,7 @@ void NodeView::createBaseVars()
         NodeView *nv = WorldInfo::getInstance().getNodeView();
         VectorData *data = new VectorData();
         nv->addMovable(data);
-        data->move(pos - nv->pos());
+        data->move(nv->convertSpace(pos));
 
     }));
 
@@ -319,6 +315,33 @@ void NodeView::createBaseVars()
     {
         NodeView *nv = WorldInfo::getInstance().getNodeView();
         CameraData *data = new CameraData();
+        nv->addMovable(data);
+        data->move(pos - nv->pos());
+
+    }));
+
+    contextManager.addVariable("Light", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        LightData *data = new LightData();
+        nv->addMovable(data);
+        data->move(pos - nv->pos());
+
+    }));
+
+    contextManager.addVariable("Scene Object", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        SceneObjectData *data = new SceneObjectData();
+        nv->addMovable(data);
+        data->move(pos - nv->pos());
+
+    }));
+
+    contextManager.addVariable("Color", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        ColorData *data = new ColorData();
         nv->addMovable(data);
         data->move(pos - nv->pos());
 
@@ -331,6 +354,14 @@ void NodeView::createBaseActions()
     {
         NodeView *nv = WorldInfo::getInstance().getNodeView();
         CreateCamera *node = new CreateCamera();
+        nv->addMovable(node);
+        node->move(pos - nv->pos());
+    }));
+
+    contextManager.addAction("Create Light", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        CreateOmniLight *node = new CreateOmniLight();
         nv->addMovable(node);
         node->move(pos - nv->pos());
     }));
@@ -367,4 +398,9 @@ void NodeView::selectMovable(Movable *newSelection)
 ContextMenuManager &NodeView::getManager()
 {
     return contextManager;
+}
+
+QPoint NodeView::convertSpace(QPoint global)
+{
+    return global - pos();
 }

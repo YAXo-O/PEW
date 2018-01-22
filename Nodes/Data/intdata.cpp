@@ -3,6 +3,15 @@
 IntData::IntData(QWidget *parent): NodeData(parent), data(0)
 {
     visualPrepare("int");
+
+    appendParamsWidget(&wid);
+    setDebugValue("0");
+
+    connect(&wid, &IntDataWidget::valueChanged, [this]()mutable
+    {
+        data = wid.getValue();
+        setDebugValue(QString::number(data));
+    });
 }
 
 IntData::~IntData()
@@ -16,12 +25,15 @@ bool IntData::isPresent() const
 
 const void *IntData::getData()
 {
+    data = wid.getValue();
     return &data;
 }
 
 void IntData::setData(const void *newData)
 {
     data = *((int32_t *)(newData));
+    wid.setValue(data);
+    setDebugValue(QString::number(data));
 }
 
 const char *IntData::dataType() const
