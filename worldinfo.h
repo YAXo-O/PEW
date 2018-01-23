@@ -56,6 +56,7 @@ public:
     TextureManager &textureManager();
 
     unsigned getCurrentFrame() const;
+    unsigned getFrameCount() const;
 
 
 protected:
@@ -82,6 +83,7 @@ public slots:
     void changeFPS(double newFPS);
     void renderFrame(QImage *&frame);
     void simulate();
+    void simulateNext();
 
 signals:
     void currentFrameChanged(unsigned newCF);

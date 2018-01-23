@@ -51,6 +51,8 @@ void ColorDataWidget::setValue(const QColor &value)
 {
     color = value;
     colorPicker->setText(QString("<div style=\"background-color: ") + color.name() + QString(";\"></div>"));
+
+    emit valueChanged(value);
 }
 
 bool ColorDataWidget::eventFilter(QObject *object, QEvent *event)
@@ -59,6 +61,7 @@ bool ColorDataWidget::eventFilter(QObject *object, QEvent *event)
     {
         color = QColorDialog::getColor(color, this, "Light color");
         colorPicker->setText(QString("<div style=\"background-color: ") + color.name() + QString(";\"></div>"));
+        emit(valueChanged(color));
 
         return true;
     }

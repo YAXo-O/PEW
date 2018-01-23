@@ -67,6 +67,7 @@ void OutNode::enable(BaseNode *)
     {
         // Have to create preview(for viewport)
         RenderStatus &stat = info.getRenderStatus();
+        stat.setSimProgress(100 * (double(info.getCurrentFrame() + 1)/info.getFrameCount()));
 
         QMetaObject::Connection con;
         con = connect(camera, &Camera::drewLine,
@@ -75,7 +76,6 @@ void OutNode::enable(BaseNode *)
                                     stat.setDisplayProgress(progress * 100);
                                     info.getViewport()->repaint();
                                 });
-        stat.show();
         camera->setSize(frame->size());
         camera->setResolution(frame->size());
         camera->renderScene(*frame);
@@ -102,8 +102,9 @@ void OutNode::enable(BaseNode *)
             if(!output.save(options->path + QString("frame_") + QString::number(info.getCurrentFrame()) + ".png"))
                 QMessageBox::warning(this, "Write file error", "Can not write file!\n Check path and format!\n");
         }
-        stat.hide();
     }
 
     BaseNode::enable();
+    info.changeCurrentFrame(info.getCurrentFrame() + 1);
+    info.simulateNext();
 }

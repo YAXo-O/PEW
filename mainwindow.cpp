@@ -63,8 +63,10 @@ void MainWindow::mousePressEvent(QMouseEvent *pe)
 void MainWindow::setConnections()
 {
     connectWidgets();
+    WorldInfo &info = WorldInfo::getInstance();
     tline->setConnections(ui->timeline_slider, ui->current_frame_line, ui->simulate_pb);
-    connect(tline, SIGNAL(frameChanged(uint)), &(WorldInfo::getInstance()), SLOT(changeCurrentFrame(uint)));
+    connect(tline, SIGNAL(frameChanged(uint)), &info, SLOT(changeCurrentFrame(uint)));
+    connect(&info, SIGNAL(currentFrameChanged(uint)), tline, SLOT(setCurrentFrame(uint)));
 }
 
 void MainWindow::connectWidgets()
@@ -100,4 +102,6 @@ void MainWindow::prepareScene()
     instance->material().getAmbient().setTexture(&texture);
     instance->material().getAmbient().setIndex(.05);
     wifo.registerObject(instance);
+
+    wifo.changeEndFrame(3);
 }

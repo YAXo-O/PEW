@@ -17,6 +17,9 @@ public:
     void setConnections(QSlider *slide, QLineEdit *edit, QPushButton *simulate);
     void breakConnections(QSlider *slide, QLineEdit *edit, QPushButton *simulate);
 
+public slots:
+    void setCurrentFrame(unsigned frame);
+
 signals:
     void frameChanged(unsigned newFrame);
 

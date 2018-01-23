@@ -3,6 +3,8 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
+#include <QDebug>
+
 #include "floatdatawidget.h"
 
 FloatDataWidget::FloatDataWidget(QWidget *parent) : QWidget(parent), value(new QLineEdit("0"))
@@ -22,6 +24,7 @@ FloatDataWidget::FloatDataWidget(QWidget *parent) : QWidget(parent), value(new Q
 
 float FloatDataWidget::getValue() const
 {
+    qDebug() << value->text() << value->text().toDouble();
     return value->text().toDouble();
 }
 

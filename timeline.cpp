@@ -27,6 +27,12 @@ void Timeline::breakConnections(QSlider *slide, QLineEdit *edit, QPushButton *si
     disconnect(simulate, SIGNAL(clicked(void)), &WorldInfo::getInstance(), SLOT(simulate()));
 }
 
+void Timeline::setCurrentFrame(unsigned frame)
+{
+    emit changeSlider(frame);
+    emit changeText(QString::number(frame));
+}
+
 void Timeline::sliderChanged(int value)
 {
     emit changeText(QString::number(value));

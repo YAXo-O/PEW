@@ -151,6 +151,11 @@ unsigned WorldInfo::getCurrentFrame() const
     return currentFrame;
 }
 
+unsigned WorldInfo::getFrameCount() const
+{
+    return endFrame - startFrame;
+}
+
 void WorldInfo::setViewport(Viewport *&value)
 {
     viewport = value;
@@ -193,6 +198,19 @@ void WorldInfo::renderFrame(QImage *&frame)
 
 void WorldInfo::simulate()
 {
+    changeCurrentFrame(0);
     emit resetSimulation();
+    stat.show();
+    nview->simulate();
+}
+
+void WorldInfo::simulateNext()
+{
+    if(currentFrame > endFrame)
+    {
+        stat.hide();
+
+        return;
+    }
     nview->simulate();
 }
