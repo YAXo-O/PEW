@@ -11,17 +11,17 @@ TextureManager::~TextureManager()
         delete i;
 }
 
-QImage &TextureManager::getTexture(const QString &filename)
+QImage *TextureManager::getTexture(const QString &filename)
 {
     if(table.contains(filename))
-        return *table[filename];
+        return table[filename];
 
     table[filename] = new QImage(filename);
 
-    return *table[filename];
+    return table[filename];
 }
 
-QImage &TextureManager::getTexture(const QString &&filename)
+QImage *TextureManager::getTexture(const QString &&filename)
 {
     return getTexture(filename);
 }

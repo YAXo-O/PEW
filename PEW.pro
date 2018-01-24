@@ -102,7 +102,18 @@ SOURCES += main.cpp\
     Nodes/Data/lightdata.cpp \
     Nodes/Data/colordata.cpp \
     Nodes/Data/colordatawidget.cpp \
-    Nodes/Data/colorparamscontainer.cpp
+    Nodes/Data/colorparamscontainer.cpp \
+    Nodes/BasicNodes/createmesh.cpp \
+    Nodes/Data/wireframemeshinstancedata.cpp \
+    meshmanager.cpp \
+    Nodes/NodesWidgets/createmeshwidget.cpp \
+    Nodes/NodesWidgets/createmeshparamscontainer.cpp \
+    Nodes/Data/materialdata.cpp \
+    Nodes/Data/mapwidget.cpp \
+    Nodes/Data/materialdatawidget.cpp \
+    Nodes/Data/materialparamscontainer.cpp \
+    Nodes/BasicNodes/creatematerial.cpp \
+    Nodes/BasicNodes/setmaterial.cpp
 
 HEADERS  += mainwindow.h \
     pewwidget.h \
@@ -185,7 +196,18 @@ HEADERS  += mainwindow.h \
     Nodes/Data/lightdata.h \
     Nodes/Data/colordata.h \
     Nodes/Data/colordatawidget.h \
-    Nodes/Data/colorparamscontainer.h
+    Nodes/Data/colorparamscontainer.h \
+    Nodes/BasicNodes/createmesh.h \
+    Nodes/Data/wireframemeshinstancedata.h \
+    meshmanager.h \
+    Nodes/NodesWidgets/createmeshwidget.h \
+    Nodes/NodesWidgets/createmeshparamscontainer.h \
+    Nodes/Data/materialdata.h \
+    Nodes/Data/mapwidget.h \
+    Nodes/Data/materialdatawidget.h \
+    Nodes/Data/materialparamscontainer.h \
+    Nodes/BasicNodes/creatematerial.h \
+    Nodes/BasicNodes/setmaterial.h
 
 FORMS    += mainwindow.ui \
     renderstatus.ui

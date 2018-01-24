@@ -24,7 +24,6 @@ FloatDataWidget::FloatDataWidget(QWidget *parent) : QWidget(parent), value(new Q
 
 float FloatDataWidget::getValue() const
 {
-    qDebug() << value->text() << value->text().toDouble();
     return value->text().toDouble();
 }
 

@@ -30,8 +30,24 @@ NodeView *WorldInfo::getNodeView() const
 
 WorldInfo::WorldInfo(): QObject(nullptr),
     currentFrame(0), startFrame(0), endFrame(100), fps(30),
-    nview(nullptr), viewport(nullptr), nodeParams(nullptr), tManager(new TextureManager)
+    nview(nullptr), viewport(nullptr), nodeParams(nullptr),
+    tManager(new TextureManager), mManager(new MeshManager)
 {
+    ColorMap &ambient = defaultMat.getAmbient();
+    ambient.setTexture(tManager->getTexture("./default/checker.jpg"));
+    ambient.setIndex(.05);
+
+    ColorMap &diffuse = defaultMat.getDiffuse();
+    diffuse.setTexture(tManager->getTexture("./default/checker.jpg"));
+    diffuse.setIndex(1);
+
+    ColorMap &specularColor = defaultMat.getSpecularColor();
+    specularColor.setBaseColor(Qt::white);
+    specularColor.setIndex(1);
+
+    ColorMap &specularLevel =defaultMat.getSpecularLevel();
+    specularLevel.setBaseColor(Qt::white);
+    specularLevel.setIndex(8);
 }
 
 Viewport *WorldInfo::getViewport() const
@@ -146,6 +162,11 @@ TextureManager &WorldInfo::textureManager()
     return *tManager;
 }
 
+MeshManager &WorldInfo::meshManager()
+{
+    return *mManager;
+}
+
 unsigned WorldInfo::getCurrentFrame() const
 {
     return currentFrame;
@@ -154,6 +175,11 @@ unsigned WorldInfo::getCurrentFrame() const
 unsigned WorldInfo::getFrameCount() const
 {
     return endFrame - startFrame;
+}
+
+Material *WorldInfo::getDefaultMaterial()
+{
+    return &defaultMat;
 }
 
 void WorldInfo::setViewport(Viewport *&value)

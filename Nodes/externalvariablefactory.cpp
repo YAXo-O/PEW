@@ -21,6 +21,10 @@ ExternalVariable *ExternalVariableFactory::createExternal(const char *varType, c
         res = createSceneObject(varName, direction);
     else if(varType == ColorData::dataType_s())
         res = createColor(varName, direction);
+    else if(varType == WireframeMeshInstanceData::dataType_s())
+        res = createWireframeMeshInstance(varName, direction);
+    else if(varType == MaterialData::dataType_s())
+        res = createMaterial(varName, direction);
 
     return res;
 }
@@ -97,6 +101,23 @@ ExternalVariable *ExternalVariableFactory::createColor(const QString &varName, c
 {
     DataPin *pin = new DataPin(varName, ColorData::dataType_s(), direction);
     ColorParamsContainer *container = new ColorParamsContainer(new ColorDataWidget());
+    ExternalVariable *res = new ExternalVariable(pin, container);
+
+    return res;
+}
+
+ExternalVariable *ExternalVariableFactory::createWireframeMeshInstance(const QString &varName, const dataFlowFlag direction)
+{
+    DataPin *pin = new DataPin(varName, WireframeMeshInstanceData::dataType_s(), direction);
+    ExternalVariable *res = new ExternalVariable(pin, nullptr);
+
+    return res;
+}
+
+ExternalVariable *ExternalVariableFactory::createMaterial(const QString &varName, const dataFlowFlag direction)
+{
+    DataPin *pin = new DataPin(varName, MaterialData::dataType_s(), direction);
+    MaterialParamsContainer *container = new MaterialParamsContainer(new MaterialDataWidget);
     ExternalVariable *res = new ExternalVariable(pin, container);
 
     return res;

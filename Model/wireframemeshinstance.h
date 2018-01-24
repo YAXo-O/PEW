@@ -30,6 +30,8 @@ public:
     void move(QVector3D shift) override;
     void rotate(QVector3D rotator) override;
 
+    void changeMaterial(Material *mat);
+
 protected:
     void pointToMeshSpace(QVector3D &point);
     void rayToMeshSpace(QVector3D &origin, QVector3D &dir);
@@ -40,7 +42,7 @@ private:
     QVector3D pivotPoint;
     // Transformation matrix should also be presented here
     WireframeMesh *mesh;
-    Material mat;
+    Material *mat;
     Matrix transforms; // World to mesh space
     Matrix reverseTransforms; // Mesh to world space
 

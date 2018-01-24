@@ -11,7 +11,9 @@
 #include "tracinginfo.h"
 #include "CompulsorySceneObjects/baselight.h"
 #include "texturemanager.h"
+#include "meshmanager.h"
 #include "renderstatus.h"
+#include "Model/material.h"
 
 class NodeData;
 class QVector3D;
@@ -54,9 +56,12 @@ public:
     bool isBlocked(const QVector3D &origin,const QVector3D &dir);
     bool isBlocked(const QVector3D &origin, const QVector3D &dir, const QVector3D &exclude);
     TextureManager &textureManager();
+    MeshManager &meshManager();
 
     unsigned getCurrentFrame() const;
     unsigned getFrameCount() const;
+
+    Material *getDefaultMaterial();
 
 
 protected:
@@ -74,7 +79,9 @@ private:
     QList<SceneObject *> objects;
     QList<BaseLight *> lights;
     TextureManager *tManager;
+    MeshManager *mManager;
     RenderStatus stat;
+    Material defaultMat;
 
 public slots:
     void changeCurrentFrame(unsigned newCF);

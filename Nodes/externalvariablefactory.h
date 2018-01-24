@@ -18,6 +18,8 @@ private:
     static ExternalVariable *createLight(const QString &varName, const dataFlowFlag direction);
     static ExternalVariable *createSceneObject(const QString &varName, const dataFlowFlag direction);
     static ExternalVariable *createColor(const QString &varName, const dataFlowFlag direction);
+    static ExternalVariable *createWireframeMeshInstance(const QString &varName, const dataFlowFlag direction);
+    static ExternalVariable *createMaterial(const QString &varName, const dataFlowFlag direction);
 };
 
 #endif // EXTERNALVARIABLEFACTORY_H

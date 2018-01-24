@@ -6,7 +6,7 @@
 #include <QDebug>
 
 WireframeMeshInstance::WireframeMeshInstance(WireframeMesh *_mesh, QVector3D _pivotPoint): Model(),
-    pivotPoint(_pivotPoint), mesh(_mesh),
+    pivotPoint(_pivotPoint), mesh(_mesh), mat(new Material),
     transforms(4, 4), reverseTransforms(4, 4),
     bShowEdgedFaces(true), bShowVerticies(true), bShowSurface(false)
 {
@@ -26,7 +26,7 @@ rayTraceInfo WireframeMeshInstance::intersect(const QVector3D &_origin, const QV
         pointFromMeshSpace(meshIntersection.intersection);
         rayTraceInfo result;
         if(meshIntersection.bIntersects)
-            result.color = mat.getColor(meshIntersection, dir);
+            result.color = mat->getColor(meshIntersection, dir);
 
         result.bIntersects = meshIntersection.bIntersects;
         result.param = meshIntersection.param;
@@ -97,7 +97,7 @@ const char *WireframeMeshInstance::type() const
 
 Material &WireframeMeshInstance::material()
 {
-    return mat;
+    return *mat;
 }
 
 void WireframeMeshInstance::move(QVector3D shift)
@@ -112,6 +112,11 @@ void WireframeMeshInstance::rotate(QVector3D rotator)
     Matrix shiftBack = transformations::moveMatrix(pivotPoint);
     transforms *= shift*transformations::rotationMatrix(-rotator)*shiftBack;
     reverseTransforms = shift*transformations::rotationMatrix(rotator)*shiftBack;
+}
+
+void WireframeMeshInstance::changeMaterial(Material *_mat)
+{
+    mat = _mat;
 }
 
 void WireframeMeshInstance::rayToMeshSpace(QVector3D &origin, QVector3D &dir)

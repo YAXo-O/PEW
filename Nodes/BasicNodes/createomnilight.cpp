@@ -28,7 +28,7 @@ void CreateOmniLight::enable(BaseNode *caller)
     {
         lightInfo props;
         props.color = *((QColor *)color->getValue());
-        props.intensity = *((float *)intensity->getValue());
+        props.intensity = *((double *)intensity->getValue());
         props.position = *((QVector3D *)pos->getValue());
 
         BaseLight *l = new BaseLight(props);

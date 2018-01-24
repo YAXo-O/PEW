@@ -20,6 +20,7 @@ public:
     bool hasFired() const;
     void resetFired();
 
+
 private:
     Output *start;
     Input *end;

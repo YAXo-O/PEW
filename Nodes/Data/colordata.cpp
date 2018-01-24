@@ -3,9 +3,14 @@
 ColorData::ColorData(QWidget *parent): NodeData(parent), data(0, 0, 0)
 {
     visualPrepare("color");
-    setDebugValue(data.name());
+    debugColor(data);
 
     appendParamsWidget(&wid);
+    connect(&wid, &ColorDataWidget::valueChanged, [this](QColor newColor)mutable
+    {
+        debugColor(newColor);
+    });
+
 }
 
 ColorData::~ColorData()
@@ -39,4 +44,9 @@ const char *ColorData::dataType() const
 const char *ColorData::dataType_s()
 {
     return typeid(QColor).name();
+}
+
+void ColorData::debugColor(const QColor &value)
+{
+    setDebugValue(value.name());
 }

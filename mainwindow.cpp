@@ -92,16 +92,16 @@ void MainWindow::setValidators()
 void MainWindow::prepareScene()
 {
     WorldInfo &wifo = WorldInfo::getInstance();
-    TextureManager &manager = wifo.textureManager();
-    QImage &texture = manager.getTexture("./checker.jpg");
 
+    /*
     OBJFileParser parser;
     WireframeMesh *mesh = parser.load("./planes.obj");
-    WireframeMeshInstance *instance = new WireframeMeshInstance(mesh);
-    instance->material().getDiffuse().setTexture(&texture);
-    instance->material().getAmbient().setTexture(&texture);
-    instance->material().getAmbient().setIndex(.05);
-    wifo.registerObject(instance);
+    Material *mat = new Material();
+    WireframeMeshInstance *m = new WireframeMeshInstance(mesh);
+    m->changeMaterial(mat);
+    wifo.registerObject(m);
+    */
 
-    wifo.changeEndFrame(3);
+
+    wifo.changeEndFrame(2);
 }

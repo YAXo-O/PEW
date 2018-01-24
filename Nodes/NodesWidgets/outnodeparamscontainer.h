@@ -1,7 +1,6 @@
 #ifndef OUTNODEPARAMSCONTAINER_H
 #define OUTNODEPARAMSCONTAINER_H
 
-
 #include "../nodeparamscontainer.h"
 #include "../../CompulsorySceneObjects/cameraoptions.h"
 #include "outnodewidget.h"

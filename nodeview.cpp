@@ -47,29 +47,42 @@ void NodeView::removeMovable(Movable *movable)
         if(movable == currentMovable)
             deselectMovable();
         movable->setParent(nullptr);
+
+        bool bUpdate = false;
         if(movable->type() == movableNode)
         {
             freeNodes.removeOne(static_cast<BaseNode *>(movable));
             for(auto i = nodeConnectionsBegin(); i != nodeConnectionsEnd(); i++)
                 if((*i)->getStart()->parentWidget() == movable || (*i)->getEnd()->parentWidget() == movable)
+                {
                     nConnections.removeOne(*i);
-            // Remove its data connections
+                    delete (*i);
+                    bUpdate = true;
+                }
+
+            for(auto i = dataConnectionsBegin(); i != dataConnectionsEnd(); i++)
+                if((*i)->getPin()->parentWidget() == static_cast<QWidget *>(movable))
+                {
+                    dConnections.removeOne(*i);
+                    delete (*i);
+                    bUpdate = true;
+                }
         }
         else if(movable->type() == movableData)
         {
-            bool bUpdate = false;
             for(auto i = dataConnectionsBegin(); i != dataConnectionsEnd(); i++)
                 if((*i)->getData() == movable)
                 {
                     dConnections.removeOne(*i);
+                    delete (*i);
                     bUpdate = true;
                 }
-
-            if(bUpdate)
-                repaint();
         }
 
-        //WorldInfo::getInstance().getViewport()->repaint();
+        if(bUpdate)
+            repaint();
+
+
     }
 }
 
@@ -153,7 +166,6 @@ void NodeView::endConnectionData(NodeData *node)
         dConnections.append(currentDataConnection);
         currentDataConnection = nullptr;
 
-        //WorldInfo::getInstance().getViewport()->repaint();
     }
 }
 
@@ -346,6 +358,24 @@ void NodeView::createBaseVars()
         data->move(pos - nv->pos());
 
     }));
+
+    contextManager.addVariable("WireframeMeshInstance", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        WireframeMeshInstanceData *data = new WireframeMeshInstanceData();
+        nv->addMovable(data);
+        data->move(pos - nv->pos());
+
+    }));
+
+    contextManager.addVariable("Material", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        MaterialData *data = new MaterialData();
+        nv->addMovable(data);
+        data->move(pos - nv->pos());
+
+    }));
 }
 
 void NodeView::createBaseActions()
@@ -365,6 +395,31 @@ void NodeView::createBaseActions()
         nv->addMovable(node);
         node->move(pos - nv->pos());
     }));
+
+    contextManager.addAction("Create WireframeMeshInstance", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        CreateMesh *node = new CreateMesh();
+        nv->addMovable(node);
+        node->move(pos - nv->pos());
+    }));
+
+    contextManager.addAction("Create Material", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        CreateMaterial *node = new CreateMaterial();
+        nv->addMovable(node);
+        node->move(pos - nv->pos());
+    }));
+
+    contextManager.addAction("Set Material", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        SetMaterial *node = new SetMaterial();
+        nv->addMovable(node);
+        node->move(pos - nv->pos());
+    }));
+
 }
 
 NodeConnection *NodeView::getCurrentConnection() const
