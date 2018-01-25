@@ -58,7 +58,6 @@ void RayTraceMultiThreadRenderer::start()
             QVector3D rayDirection = (planePoint - origin);
             closestIntersection.bIntersects = false;
 
-            //for(auto i = wi.begin(); i != wi.end(); i++)
             for(auto i:wi)
             {
                 rayTraceInfo intersection = i->intersect(origin, rayDirection);

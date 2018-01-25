@@ -16,6 +16,9 @@ WireframeMeshInstance::WireframeMeshInstance(WireframeMesh *_mesh, QVector3D _pi
 
 rayTraceInfo WireframeMeshInstance::intersect(const QVector3D &_origin, const QVector3D &_dir)
 {
+    if(!bVisible)
+        return rayTraceInfo();
+
     // Here we should apply transformations to an intersection point (reverse transformation)
     QVector3D origin(_origin);
     QVector3D dir(_dir);
@@ -106,12 +109,28 @@ void WireframeMeshInstance::move(QVector3D shift)
     reverseTransforms = transformations::moveMatrix(shift);
 }
 
+void WireframeMeshInstance::moveTo(QVector3D point)
+{
+    move(point - pivotPoint);
+}
+
 void WireframeMeshInstance::rotate(QVector3D rotator)
 {
     Matrix shift = transformations::moveMatrix(-pivotPoint);
     Matrix shiftBack = transformations::moveMatrix(pivotPoint);
     transforms *= shift*transformations::rotationMatrix(-rotator)*shiftBack;
     reverseTransforms = shift*transformations::rotationMatrix(rotator)*shiftBack;
+}
+
+SceneObject *WireframeMeshInstance::copy()
+{
+    WireframeMeshInstance *c = new WireframeMeshInstance(mesh, pivotPoint);
+    c->setVisible(true);
+    c->changeMaterial(mat);
+    WorldInfo::getInstance().registerObject(c);
+
+    return c;
+
 }
 
 void WireframeMeshInstance::changeMaterial(Material *_mat)

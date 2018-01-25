@@ -28,9 +28,12 @@ public:
     Material &material();
 
     void move(QVector3D shift) override;
+    void moveTo(QVector3D point) override;
     void rotate(QVector3D rotator) override;
+    SceneObject *copy() override;
 
     void changeMaterial(Material *mat);
+
 
 protected:
     void pointToMeshSpace(QVector3D &point);

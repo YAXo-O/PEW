@@ -25,6 +25,10 @@ ExternalVariable *ExternalVariableFactory::createExternal(const char *varType, c
         res = createWireframeMeshInstance(varName, direction);
     else if(varType == MaterialData::dataType_s())
         res = createMaterial(varName, direction);
+    else if(varType == ObjectsArray::dataType_s())
+        res = createObjectsArray(varName, direction);
+    else if(varType == ParticleSystem::dataType_s())
+        res = createParticleSystem(varName, direction);
 
     return res;
 }
@@ -119,6 +123,22 @@ ExternalVariable *ExternalVariableFactory::createMaterial(const QString &varName
     DataPin *pin = new DataPin(varName, MaterialData::dataType_s(), direction);
     MaterialParamsContainer *container = new MaterialParamsContainer(new MaterialDataWidget);
     ExternalVariable *res = new ExternalVariable(pin, container);
+
+    return res;
+}
+
+ExternalVariable *ExternalVariableFactory::createObjectsArray(const QString &varName, const dataFlowFlag direction)
+{
+    DataPin *pin = new DataPin(varName, ObjectsArray::dataType_s(), direction);
+    ExternalVariable *res = new ExternalVariable(pin, nullptr);
+
+    return res;
+}
+
+ExternalVariable *ExternalVariableFactory::createParticleSystem(const QString &varName, const dataFlowFlag direction)
+{
+    DataPin *pin = new DataPin(varName, ParticleSystem::dataType_s(), direction);
+    ExternalVariable *res = new ExternalVariable(pin, nullptr);
 
     return res;
 }

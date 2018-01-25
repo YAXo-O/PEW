@@ -12,6 +12,8 @@
 #include "colordata.h"
 #include "wireframemeshinstancedata.h"
 #include "materialdata.h"
+#include "objectsarray.h"
+#include "particlesystem.h"
 
 // Its widget
 #include "booldatawidget.h"

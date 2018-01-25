@@ -376,6 +376,25 @@ void NodeView::createBaseVars()
         data->move(pos - nv->pos());
 
     }));
+
+    contextManager.addVariable("Objects Array", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        ObjectsArray *data = new ObjectsArray();
+        nv->addMovable(data);
+        data->move(pos - nv->pos());
+
+    }));
+
+    contextManager.addVariable("Particle System", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        ParticleSystem *data = new ParticleSystem();
+        nv->addMovable(data);
+        data->move(pos - nv->pos());
+
+    }));
+
 }
 
 void NodeView::createBaseActions()
@@ -416,6 +435,30 @@ void NodeView::createBaseActions()
     {
         NodeView *nv = WorldInfo::getInstance().getNodeView();
         SetMaterial *node = new SetMaterial();
+        nv->addMovable(node);
+        node->move(pos - nv->pos());
+    }));
+
+    contextManager.addAction("Append Mesh", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        AppendMesh *node = new AppendMesh();
+        nv->addMovable(node);
+        node->move(pos - nv->pos());
+    }));
+
+    contextManager.addAction("Create Particle System", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        CreateParticleSystem *node = new CreateParticleSystem();
+        nv->addMovable(node);
+        node->move(pos - nv->pos());
+    }));
+
+    contextManager.addAction("Add Force", action([](QPoint pos)
+    {
+        NodeView *nv = WorldInfo::getInstance().getNodeView();
+        Force *node = new Force();
         nv->addMovable(node);
         node->move(pos - nv->pos());
     }));

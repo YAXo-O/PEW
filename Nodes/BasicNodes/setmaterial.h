@@ -3,10 +3,6 @@
 
 #include "../basenode.h"
 #include "../externalvariable.h"
-/*
-public slots:
-    void enable(BaseNode *caller) override;
-*/
 
 class SetMaterial : public BaseNode
 {

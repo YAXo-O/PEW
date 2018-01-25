@@ -1,6 +1,6 @@
 #include "sceneobject.h"
 
-SceneObject::SceneObject(): QObject()
+SceneObject::SceneObject(): QObject(), bVisible(true)
 {
 }
 
@@ -33,10 +33,24 @@ void SceneObject::move(QVector3D )
 {
 }
 
+void SceneObject::moveTo(QVector3D)
+{
+}
+
 void SceneObject::rotate(QVector3D )
 {
 }
 
 void SceneObject::scale(QVector3D)
 {
+}
+
+SceneObject *SceneObject::copy()
+{
+    return new SceneObject();
+}
+
+void SceneObject::setVisible(bool _bVisible)
+{
+    bVisible = _bVisible;
 }

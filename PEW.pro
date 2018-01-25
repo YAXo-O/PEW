@@ -113,7 +113,15 @@ SOURCES += main.cpp\
     Nodes/Data/materialdatawidget.cpp \
     Nodes/Data/materialparamscontainer.cpp \
     Nodes/BasicNodes/creatematerial.cpp \
-    Nodes/BasicNodes/setmaterial.cpp
+    Nodes/BasicNodes/setmaterial.cpp \
+    Nodes/Data/objectsarray.cpp \
+    Nodes/BasicNodes/appendmesh.cpp \
+    Nodes/BasicNodes/createparticlesystem.cpp \
+    particle.cpp \
+    Nodes/Data/particlesystem.cpp \
+    Nodes/NodesWidgets/createparticlesystemwidget.cpp \
+    Nodes/NodesWidgets/createparticlesystemcontainer.cpp \
+    Nodes/BasicNodes/force.cpp
 
 HEADERS  += mainwindow.h \
     pewwidget.h \
@@ -207,7 +215,15 @@ HEADERS  += mainwindow.h \
     Nodes/Data/materialdatawidget.h \
     Nodes/Data/materialparamscontainer.h \
     Nodes/BasicNodes/creatematerial.h \
-    Nodes/BasicNodes/setmaterial.h
+    Nodes/BasicNodes/setmaterial.h \
+    Nodes/Data/objectsarray.h \
+    Nodes/BasicNodes/appendmesh.h \
+    Nodes/BasicNodes/createparticlesystem.h \
+    particle.h \
+    Nodes/Data/particlesystem.h \
+    Nodes/NodesWidgets/createparticlesystemwidget.h \
+    Nodes/NodesWidgets/createparticlesystemcontainer.h \
+    Nodes/BasicNodes/force.h
 
 FORMS    += mainwindow.ui \
     renderstatus.ui

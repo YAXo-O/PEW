@@ -6,5 +6,8 @@
 #include "createmesh.h"
 #include "creatematerial.h"
 #include "setmaterial.h"
+#include "appendmesh.h"
+#include "createparticlesystem.h"
+#include "force.h"
 
 #endif // ACTIONS_H
