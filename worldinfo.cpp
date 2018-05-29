@@ -232,7 +232,7 @@ void WorldInfo::simulate()
 
 void WorldInfo::simulateNext()
 {
-    if(currentFrame > endFrame)
+    if(currentFrame > 0)
     {
         stat.hide();
 

@@ -1,6 +1,6 @@
 #include "materialdata.h"
 
-MaterialData::MaterialData(QWidget *parent): NodeData(parent)
+MaterialData::MaterialData(QWidget *parent): NodeData(parent), data(nullptr)
 {
     visualPrepare("material");
     prepareParamPanel();
